@@ -1,0 +1,3 @@
+#+LAYOUT: categories
+#+ICON: fas fa-stream
+#+ORDER: 5

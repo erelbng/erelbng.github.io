@@ -1,0 +1,14 @@
+#+TITLE: "Welcome to my website!"
+#+DATE: 2025-10-13
+#+TAGS: miscellaneous, about me
+#+CATEGORIES: Blog
+
+(updated in january 2025)
+
+Hello everyone! I'm Eric Elbing, a mechanical engineer specializing in mechatronics. I earned my master’s degree from the [[https://fing.htwk-leipzig.de/startseite][University of Applied Sciences in Leipzig]] (Germany), where I'm still conducting extensive research on mobile robotics under the supervision of [[https://fing.htwk-leipzig.de/fakultaet/professuren/prof-martin-guertler/][Prof. Dr. rer. nat. Martin Gürtler]]. My research is supported by the EU and the state of Saxony through the [[https://european-social-fund-plus.ec.europa.eu/en][ESF Plus fund]].
+
+Beyond my research, I work as a mechanical engineer at [[https://www.zoema.de/][Zöschener Maschinen und Anlagenbau GmbH]].
+
+Many of my projects have remained behind the scenes—something I want to change. That’s why I created this website: to share insights from my research, showcase my work, and connect with different individuals worldwide. I stumbled across the website of [[https://eertmans.be/][Jérome Eertmans]], which i used strongly as inspiration.
+
+Thank you for visiting! If you have further questions (i.e. information that you can't find [[https://orcid.org/0009-0005-9967-4500][here]]), don't hesitate to contact me.

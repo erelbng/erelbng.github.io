@@ -1,0 +1,45 @@
+#+TITLE: "3D Printer as a milling machine"
+#+DATE: 2024-04-06
+#+CATEGORIES: Blog
+#+TAGS: miscellaneous
+#+IMAGE_PATH: /assets/images/platine_printer.jpg
+#+IMAGE_ALT: Ender 3 Pro as milling machine
+
+(updated in October 2025)
+
+One of the first projects I want to share, because so many people have asked about it, is how I converted my old 3D printer into a CNC milling machine.
+I primarily followed [[https://nmeurer.de/2021/01/cnc-fraese-aus-3d-drucker-und-dremel-bauen/][this guide by Noah Meurer]] and adapted it to fit my specific needs.
+
+For a study project, I needed to mill a circuit board, so I decided to repurpose my 3D printer for the task.
+The process involved replacing the hotend with a Dremel tool, updating the firmware to disable temperature regulation (since a hotend is no longer required), and 3D printing a custom mounting bracket for the Dremel’s flexible shaft.
+Before proceeding with the conversion, I printed the necessary bracket, which you can find [[https://www.thingiverse.com/thing:3202418][here]].
+
+One of the biggest hurdles was reducing vibrations and ensuring smooth motion at cutting speeds.
+I had to fine-tune feed rates and experiment with different tool paths to get clean cuts.
+The first milling passes revealed areas for improvement, as seen in the image below:
+
+#+BEGIN_EXPORT html
+<div>
+    <img align="center" src="/assets/images/first_attempt.png" alt="first_attempt" style="width: 60%;">
+</div>
+#+END_EXPORT
+
+Through optimization—adjusting parameters such as feed rate and cutting depth—I was able to achieve significantly cleaner cuts:
+
+#+BEGIN_EXPORT html
+<div>
+    <img align="center" src="/assets/images/before_after.png" alt="before_after" style="width: 60%;">
+</div>
+#+END_EXPORT
+
+Ultimately producing my first successful circuit board:
+
+#+BEGIN_EXPORT html
+<div>
+    <img align="center" src="/assets/images/final_pcb.jpg" alt="final_pcb" style="width: 60%;">
+</div>
+#+END_EXPORT
+
+The conversion has opened up new possibilities—from engraving designs to cutting soft materials like wood and acrylic, which I definitely want to try out next.
+
+If you have any questions regarding the project, don’t hesitate to contact me.

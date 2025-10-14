@@ -1,0 +1,20 @@
+#+TITLE: "Leipzig - Award for Applied Digitalisation"
+#+DATE: 2024-11-12
+#+CATEGORIES: Blog
+#+TAGS: research
+#+IMAGE_PATH: /assets/images/digitalization_award.jpg
+#+IMAGE_ALT: Me, presenting my work on pitch day (Picture: Actemium Deutschland, edited by Eric Elbing)
+
+I am honored to announce that I have been awarded 1st place in the 2024 *Förderpreis für Angewandte Digitalisierung* by [[https://www.actemium.de/news/htwk-forderpreis-2024/][Actemium Deutschland]] and [[https://www.htwk-leipzig.de/hochschule/aktuelles/newsdetail/artikel/die-gewinner-des-foerderpreises-fuer-angewandte-digitalisierung-2024][HTWK Leipzig]]. This award recognizes degree theses that make significant contributions to the practical application of digital technologies in industry and business.
+
+At the Pitch Day on 24 October 2024 in Leipzig (Germany), I presented my master’s thesis, titled *mobile FACTORy: Framework for Advanced Control and Training of Mobile Robots*, which focuses on the application of machine learning techniques to enhance the training and control of mobile robots. The core concept involves breaking down complex tasks into simpler sub-tasks, each managed by trained software agents. This methodology draws inspiration from the Methods-Time Measurement (MTM) approach, which segments processes into fundamental activities for improved efficiency and planning.
+
+I extend my sincere gratitude to my advisor, [[https://fing.htwk-leipzig.de/fakultaet/professuren/prof-martin-guertler/][Prof. Dr. rer. nat. Martin Gürtler]], whose expertise and guidance were invaluable throughout the research process. His insights significantly contributed to the successful completion of this project.
+
+Additionally, I would like to acknowledge and congratulate the other award recipients:
+- 2nd Place: Anton Thomé, for his research on optimizing dynamic weighing processes for precise in-process quality control.
+- 3rd Place: Lucas Döring, for his work on generating BIM models from point clouds of existing steel structures.
+
+_further reading:_
+- [[https://www.actemium.de/news/htwk-forderpreis-2024/][Article from Actemium Deutschland]]
+- [[https://www.htwk-leipzig.de/hochschule/aktuelles/newsdetail/artikel/die-gewinner-des-foerderpreises-fuer-angewandte-digitalisierung-2024][Article from HTWK Leipzig]]

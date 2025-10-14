@@ -1,0 +1,11 @@
+#+LAYOUT: page
+#+ICON: fa-solid fa-calendar-check
+#+ORDER: 2
+
+
+Feel free to book an appointmente [https://cal.com/eric.elbing][here] (for better mobile support), or just check below.
+
+#+BEGIN_EXPORT html
+<!-- <iframe style="width: 100%; height: 70vh;" src="https://cal.ric.engineering/eric.elbing" title="https://cal.ric.engineering/eric.elbing"></iframe>  -->
+<iframe style="width: 100%; height: 70vh;" src="https://cal.com/eric.elbing" title="https://cal.com/eric.elbing"></iframe>
+#+END_EXPORT
