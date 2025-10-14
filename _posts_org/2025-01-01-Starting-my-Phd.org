@@ -1,9 +1,9 @@
 
-#+TITLE: "Starting my PhD"
+#+TITLE: Starting my PhD
 #+DATE: 2025-01-01
 #+CATEGORIES: Blog
 #+TAGS: research
 
 I’m excited to share that I’ve started my PhD in Mobile Robotics at [[https://fing.htwk-leipzig.de/en/fakultaet/mitglieder/wissenschaftliche-mitarbeitende/eric-elbing][HTWK Leipzig]]! My research will focus on developing intelligent control and learning systems for autonomous robots.
 
-A heartfelt thank you to my supervisor, [[https://fing.htwk-leipzig.de/fakultaet/professuren/prof-martin-guertler/][Prof. Dr. rer. nat. Martin Gürtler]], and everyone who supports me on this journey.
+A heartfelt thank you to my supervisors [[https://fing.htwk-leipzig.de/fakultaet/professuren/prof-martin-guertler/][Prof. Dr. rer. nat. Martin Gürtler]] and [[https://www.uni-leipzig.de/personenprofil/mitarbeiter/andre-ludwig][Prof. Dr. André Ludwig]], as well as everyone who supports me on this journey.

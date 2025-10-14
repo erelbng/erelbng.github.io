@@ -4,10 +4,9 @@ icon: fas fa-info-circle
 order: 1
 ---
 
-![Searching for these bugs - Generated with Fooocus](/assets/images/debugging.png){: .shadow }
-_Searching for these bugs - Generated with Fooocus_
+![a banner containing some of my projects](/assets/images/banner.jpg)
 
-I'm Eric Elbing, a mechanical engineer specializing in mechatronics. I earned my master’s degree from the [University of Applied Sciences in Leipzig](https://fing.htwk-leipzig.de/startseite) (Germany), where I'm still conducting extensive research on mobile robotics under the supervision of [Prof. Dr. rer. nat. Martin Gürtler](https://fing.htwk-leipzig.de/fakultaet/professuren/prof-martin-guertler/). My research is supported by the EU and the state of Saxony through the [ESF Plus fund](https://european-social-fund-plus.ec.europa.eu/en).  
+I'm Eric Elbing, a mechanical engineer specializing in mechatronics. I earned my master’s degree from the [University of Applied Sciences in Leipzig](https://fing.htwk-leipzig.de/startseite) (Germany), where I'm still conducting extensive research on mobile robotics under the supervision of [Prof. Dr. rer. nat. Martin Gürtler](https://fing.htwk-leipzig.de/fakultaet/professuren/prof-martin-guertler/) and [Prof. Dr. André Ludwig](https://www.uni-leipzig.de/personenprofil/mitarbeiter/andre-ludwig). My research is supported by the EU and the state of Saxony through the [ESF Plus fund](https://european-social-fund-plus.ec.europa.eu/en).  
 
 Beyond my research, I work as a mechanical engineer at [Zöschener Maschinen und Anlagenbau GmbH](https://www.zoema.de/).  
 

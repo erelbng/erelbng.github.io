@@ -1,4 +1,4 @@
-#+TITLE: "3D Printer as a milling machine"
+#+TITLE: 3D Printer as a milling machine
 #+DATE: 2024-04-06
 #+CATEGORIES: Blog
 #+TAGS: miscellaneous

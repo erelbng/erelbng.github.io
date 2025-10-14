@@ -1,4 +1,4 @@
-#+TITLE: "Welcome to my website!"
+#+TITLE: Welcome to my website!
 #+DATE: 2025-10-13
 #+TAGS: miscellaneous, about me
 #+CATEGORIES: Blog

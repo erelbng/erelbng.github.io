@@ -26,10 +26,10 @@ description: >- # used by seo meta and the atom feed
 url: "https://ric.engineering"
 
 github:
-  username: github_username # change to your GitHub username
+  username: erelbng # change to your GitHub username
 
 orcid:
-  username: ID
+  username: 0009-0005-9967-4500
 
 linkedin:
   username: eric-elbing
@@ -91,7 +91,7 @@ pageviews:
 #     light — Use the light color scheme
 #     dark — Use the dark color scheme
 #
-theme_mode: # [light | dark]
+theme_mode: dark # [light | dark]
 
 # The CDN endpoint for media resources.
 # Notice that once it is assigned, the CDN url

@@ -1,4 +1,4 @@
-#+TITLE: "Dresden - AALE 2025"
+#+TITLE: Dresden - AALE 2025
 #+DATE: 2025-03-13
 #+CATEGORIES: Blog
 #+TAGS: research
