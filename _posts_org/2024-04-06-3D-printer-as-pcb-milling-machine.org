@@ -18,27 +18,15 @@ One of the biggest hurdles was reducing vibrations and ensuring smooth motion at
 I had to fine-tune feed rates and experiment with different tool paths to get clean cuts.
 The first milling passes revealed areas for improvement, as seen in the image below:
 
-#+BEGIN_EXPORT html
-<div>
-    <img align="center" src="/assets/images/first_attempt.png" alt="first_attempt" style="width: 60%;">
-</div>
-#+END_EXPORT
+[[file:/assets/images/first_attempt.png]]
 
 Through optimization—adjusting parameters such as feed rate and cutting depth—I was able to achieve significantly cleaner cuts:
 
-#+BEGIN_EXPORT html
-<div>
-    <img align="center" src="/assets/images/before_after.png" alt="before_after" style="width: 60%;">
-</div>
-#+END_EXPORT
+[[file:/assets/images/before_after.png]]
 
 Ultimately producing my first successful circuit board:
 
-#+BEGIN_EXPORT html
-<div>
-    <img align="center" src="/assets/images/final_pcb.jpg" alt="final_pcb" style="width: 60%;">
-</div>
-#+END_EXPORT
+[[file:/assets/images/final_pcb.jpg]]
 
 The conversion has opened up new possibilities—from engraving designs to cutting soft materials like wood and acrylic, which I definitely want to try out next.
 

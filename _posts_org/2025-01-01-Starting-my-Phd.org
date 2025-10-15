@@ -1,4 +1,3 @@
-
 #+TITLE: Starting my PhD
 #+DATE: 2025-01-01
 #+CATEGORIES: Blog

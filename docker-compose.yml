@@ -1,0 +1,17 @@
+services:
+  jekyll:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jekyll-chirpy
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/site
+    command: >
+      sh -c "
+        echo 'Running Emacs export...' &&
+        emacs --batch -l export-org-to-chirpy.el &&
+        echo 'Building Jekyll site...' &&
+        bundle exec jekyll serve --host 0.0.0.0 --watch
+      "

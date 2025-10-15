@@ -1,95 +1,156 @@
-;;; export-org-to-chirpy.el --- Export Org posts to Chirpy-ready HTML -*- lexical-binding: t; -*-
+;;; export-org-to-chirpy.el --- Export Org posts to Chirpy-ready Markdown -*- lexical-binding: t; -*-
 
+;; Paths — adjust as needed
 (setq posts-src "_posts_org")
 (setq posts-out "_posts")
-(setq tabs-src "_tabs_org")
-(setq tabs-out "_tabs_temp")
 (setq assets-dir "assets")
 
 (require 'org)
+(require 'subr-x)
 
 ;; Escape quotes for YAML
 (defun sanitize-yaml (text)
   "Escape double quotes in TEXT for YAML."
-  (replace-regexp-in-string "\"" "\\\\\"" text))
+  (replace-regexp-in-string "\"" "\\\\\"" (or text "")))
 
+;; Safe helper to run org-element-map and return a string (or empty)
+(defun org-get-keyword-value (key)
+  "Return the value of org KEYWORD in the current buffer as a string, or \"\"."
+  (let ((val (org-element-map (org-element-parse-buffer) 'keyword
+               (lambda (k)
+                 (when (string= (org-element-property :key k) key)
+                   (string-trim (org-element-property :value k))))
+               nil t)))
+    (cond
+      ((stringp val) val)
+      ((and (listp val) (stringp (car val))) (car val))
+      (t ""))))
+
+;; Read metadata from file (safe)
 (defun org-get-metadata (file)
-  "Return an alist of Org keywords (TITLE, DATE, TAGS, CATEGORIES, IMAGE_PATH, IMAGE_ALT) from FILE."
+  "Return an alist of Org keywords from FILE."
   (with-temp-buffer
     (insert-file-contents file)
     (org-mode)
-    (let ((title (or (org-element-map (org-element-parse-buffer) 'keyword
-                      (lambda (k) (when (string= (org-element-property :key k) "TITLE")
-                                    (org-element-property :value k))) nil t)
-                     "Untitled"))
-          (date (or (org-element-map (org-element-parse-buffer) 'keyword
-                     (lambda (k) (when (string= (org-element-property :key k) "DATE")
-                                   (org-element-property :value k))) nil t)
-                    (format-time-string "%Y-%m-%d")))
-          (tags (or (org-element-map (org-element-parse-buffer) 'keyword
-                     (lambda (k) (when (string= (org-element-property :key k) "TAGS")
-                                   (org-element-property :value k))) nil t)
-                    ""))
-          (categories (or (org-element-map (org-element-parse-buffer) 'keyword
-                          (lambda (k) (when (string= (org-element-property :key k) "CATEGORIES")
-                                        (org-element-property :value k))) nil t)
-                        ""))
-          (image-path (org-element-map (org-element-parse-buffer) 'keyword
-                        (lambda (k) (when (string= (org-element-property :key k) "IMAGE_PATH")
-                                      (org-element-property :value k))) nil t))
-          (image-alt (org-element-map (org-element-parse-buffer) 'keyword
-                       (lambda (k) (when (string= (org-element-property :key k) "IMAGE_ALT")
-                                     (org-element-property :value k))) nil t)))
-      `((TITLE . ,title)
-        (DATE . ,date)
-        (TAGS . ,tags)
-        (CATEGORIES . ,categories)
-        (IMAGE_PATH . ,image-path)
-        (IMAGE_ALT . ,image-alt)))))
+    `((TITLE . ,(org-get-keyword-value "TITLE"))
+       (DATE  . ,(org-get-keyword-value "DATE"))
+       (TAGS  . ,(org-get-keyword-value "TAGS"))
+       (CATEGORIES . ,(org-get-keyword-value "CATEGORIES"))
+       (IMAGE_PATH . ,(org-get-keyword-value "IMAGE_PATH"))
+       (IMAGE_ALT . ,(org-get-keyword-value "IMAGE_ALT")))))
 
-(defun org-post-to-html (org-file output-dir assets-dir)
-  "Export an Org post to Chirpy HTML."
+;; Convert one Org file to Markdown for Jekyll
+(defun org-post-to-markdown (org-file output-dir)
+  "Export ORG-FILE to Markdown in OUTPUT-DIR, suitable for Jekyll.
+- Builds YAML front-matter from keywords
+- Removes top #+KEY: lines
+- Converts [[file:...][Alt]] and [[file:...]] to Markdown images
+- Converts [[URL][TEXT]] -> [TEXT](URL)
+- Converts [[URL]] -> <URL>
+- Converts src blocks to fenced code blocks
+- Converts LaTeX math \\(...\\)/\\[...\\]"
   (let* ((meta (org-get-metadata org-file))
-         (title (alist-get 'TITLE meta))
-         (date (alist-get 'DATE meta))
-         (tags (alist-get 'TAGS meta))
-         (categories (alist-get 'CATEGORIES meta))
-         (image-path (alist-get 'IMAGE_PATH meta))
-         (image-alt (alist-get 'IMAGE_ALT meta))
-         (content (with-temp-buffer
-                    (insert-file-contents org-file)
-                    (org-mode)
-                    (let ((html (org-export-as 'html nil nil t nil)))
-                      (goto-char (point-min))
-                      (while (re-search-forward "\\\\\\((.+?)\\\\\\)" nil t)
-                        (replace-match "\\$\\1\\$"))
-                      (goto-char (point-min))
-                      (while (re-search-forward "\\\\\\[\\(.+?\\)\\\\\\]" nil t)
-                        (replace-match "\\$\\$\\1\\$\\$"))
-                      html))))
-    ;; Build YAML front-matter
-    (let ((yaml (concat "---\n"
-                        (format "title: \"%s\"\ndate: %s\ncategories: [%s]\ntags: [%s]\n"
-                                (sanitize-yaml title) date categories tags))))
-      (when image-path
-        ;; Provide default alt if missing
-        (setq yaml (concat yaml
-                           (format "image:\n  path: %s\n  alt: \"%s\"\n"
-                                   image-path
-                                   (sanitize-yaml (or image-alt (file-name-base image-path)))))))
-      (setq yaml (concat yaml "---\n"))
-      (make-directory output-dir t)
-      (let ((output-file (expand-file-name (concat (file-name-base org-file) ".html") output-dir)))
-        (with-temp-buffer
-          (insert yaml)
-          (insert content)
-          (write-region (point-min) (point-max) output-file))))))
+          (title (alist-get 'TITLE meta))
+          (date  (alist-get 'DATE meta))
+          (tags  (alist-get 'TAGS meta))
+          (categories (alist-get 'CATEGORIES meta))
+          (image-path (alist-get 'IMAGE_PATH meta))
+          (image-alt  (alist-get 'IMAGE_ALT meta)))
+    (with-temp-buffer
+      (insert-file-contents org-file)
+      (org-mode)
 
-(defun export-org-to-chirpy (posts-src posts-out tabs-src tabs-out assets-dir)
-  "Export all Org posts and tabs to Chirpy."
-  (dolist (file (directory-files posts-src t "\\.org$"))
-    (org-post-to-html file posts-out assets-dir)))
+      ;; 1) Remove top Org keyword lines so they don't appear in output
+      (goto-char (point-min))
+      (while (looking-at-p "^#\\+\\(TITLE\\|DATE\\|TAGS\\|CATEGORIES\\|IMAGE_PATH\\|IMAGE_ALT\\):")
+        (delete-region (line-beginning-position) (1+ (line-end-position))))
 
-(export-org-to-chirpy posts-src posts-out tabs-src tabs-out assets-dir)
+      ;; 2) Convert file links to Markdown images
+      (goto-char (point-min))
+      (while (re-search-forward "\\[\\[file:\\([^]\n]+\\)\\]\\(?:\\[\\([^]\n]+\\)\\]\\)?" nil t)
+        (let* ((path (match-string 1))
+                (alt (match-string 2))
+                (alt-text (if (and alt (not (string= alt ""))) alt (file-name-base path)))
+                (md (format "![%s](%s) " (string-trim alt-text) path)))
+          (replace-match md t t)))
 
-(message "✅ Org → Chirpy HTML export complete!")
+      ;; 3) Convert regular Org links [[URL][TEXT]] => [TEXT](URL)
+      (goto-char (point-min))
+      (while (re-search-forward "\\[\\[\\(https?://[^]\n]+\\)\\]\\[\\([^]\n]+\\)\\]\\]" nil t)
+        (let ((url (match-string 1))
+               (text (match-string 2)))
+          (replace-match (format "[%s](%s)" text url) t t)))
+
+      ;; 4) Convert bracketed URL [[https://...]] => <https://...>
+      (goto-char (point-min))
+      (while (re-search-forward "\\[\\[\\(https?://[^]\n]+\\)\\]\\]" nil t)
+        (let ((url (match-string 1)))
+          (replace-match (format "<%s>" url) t t)))
+
+      ;; 5) Convert src blocks to fenced code blocks
+      ;;    Collect src-blocks then replace from end -> start to keep positions valid
+      (let* ((parsed (org-element-parse-buffer))
+              (repls '()))
+        (org-element-map parsed 'src-block
+          (lambda (src)
+            (let* ((beg (org-element-property :begin src))
+                    (end (org-element-property :end src))
+                    (lang (string-trim (or (org-element-property :language src) "")))
+                    (code (org-element-property :value src))
+                    (fenced (concat "```" (if (string= lang "") "" lang) "\n" code "\n```\n")))
+              (push (list beg end fenced) repls))))
+        ;; sort by beg descending and apply
+        (setq repls (sort repls (lambda (a b) (> (car a) (car b)))))
+        (dolist (rp repls)
+          (let ((beg (nth 0 rp))
+                 (end (nth 1 rp))
+                 (fenced (nth 2 rp)))
+            (save-excursion
+              (goto-char beg)
+              (delete-region beg end)
+              (insert fenced)))))
+
+      ;; 6) Convert LaTeX inline/display math
+      (goto-char (point-min))
+      (while (re-search-forward "\\\\\\((.+?)\\\\\\)" nil t)
+        (replace-match "\\$\\1\\$"))
+      (goto-char (point-min))
+      (while (re-search-forward "\\\\\\[\\(.+?\\)\\\\\\]" nil t)
+        (replace-match "\\$\\$\\1\\$\\$"))
+
+      ;; Remove any standalone "]" that appears after an image or at the start of a line
+      (goto-char (point-min))
+      (while (re-search-forward "\\(\\s-\\|^\\)\\]\\s-*\n" nil t)
+        (replace-match "\n"))
+
+      ;; 7) Gather final content and write output file with YAML
+      (let ((content (buffer-string))
+             (yaml (concat
+                     "---\n"
+                     (format "title: \"%s\"\ndate: %s\ncategories: [%s]\ntags: [%s]\n"
+                       (sanitize-yaml title)
+                       (or date (format-time-string "%Y-%m-%d"))
+                       (or categories "")
+                       (or tags ""))
+                     "math: true\n"
+                     ;; Only add image block if IMAGE_PATH exists
+                     (when (and image-path (not (string= image-path "")))
+                       (format "image:\n  path: %s\n  alt: \"%s\"\n"
+                         image-path
+                         (sanitize-yaml (or image-alt (file-name-base image-path)))))
+                     "---\n\n")))
+        (make-directory output-dir t)
+        (let ((out-file (expand-file-name (concat (file-name-base org-file) ".md") output-dir)))
+          (with-temp-file out-file
+            (insert yaml)
+            (insert content)))))))
+
+(defun export-org-to-chirpy (posts-src posts-out assets-dir)
+  "Export all Org posts (in POSTS-SRC) to Markdown in POSTS-OUT."
+  (dolist (f (directory-files posts-src t "\\.org$"))
+    (org-post-to-markdown f posts-out)))
+
+;; Run export
+(export-org-to-chirpy posts-src posts-out assets-dir)
+
+(message "✅ Org → Chirpy Markdown export complete!")

@@ -9,8 +9,4 @@ I am honored to announce that my master's thesis has been nominated for the pres
 
 The Student Award recognizes outstanding academic achievements in the field of automation technology. As part of the nomination, I was invited to present the key findings of my thesis to an expert audience, fostering valuable academic exchange and networking opportunities.
 
-#+BEGIN_EXPORT html
-<div>
-    <img align="center" src="/assets/images/aale_urkunde.png" alt="aale-urkunde" style="width: 60%;">
-</div>
-#+END_EXPORT
+[[file:/assets/images/aale_urkunde.png]]
