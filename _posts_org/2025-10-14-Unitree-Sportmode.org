@@ -1,0 +1,138 @@
+#+TITLE: How to disable sport mode on the Go2 - Low level control
+#+DATE: 2025-10-15
+#+CATEGORIES: Blog
+#+TAGS: research
+#+IMAGE_PATH: /assets/images/go2.png
+#+IMAGE_ALT: Go2 low level control
+
+Recently, a few people asked me how I control the Go2 in low-level mode and how I managed to disable Sport Mode.
+
+By default, the Unitree Go2 operates in high-level Sport Mode, which handles motion planning and stability for you. While convenient for most users, Sport Mode restricts access to low-level commands—making precise or custom motions impossible.
+
+Sport Mode runs directly on the MCU, and the ROS topics for low-level control and sport mode are inserted straight into the DDS. This means that the mode is not a separate Node you can simply shut down using standard ROS lifecycle management. Simply publishing low-level commands without disabling Sport Mode would result in loud noises and unpredictable behavior, potentially harming the robot.
+
+To solve this, I wrote a few python scripts that releases Sport Mode and allow low-level control.
+
+** Safely Laying Down the Robot
+When you release Sport Mode, the motors are no longer actively actuated. The robot, which typically stands up during startup, would simply collapse—potentially damaging components. To mitigate this, I wrote a script to safely lay the robot down:
+
+#+BEGIN_SRC python
+  # ===============================================================
+  #  Purpose: Safely lay down the Unitree Go2 before disabling Sport Mode
+  #  Author: Eric Elbing, 2025
+  #  License: Provided as-is, no warranty. Use at your own risk.
+  # ===============================================================
+  HIGHLEVEL = 0xEE
+  LOWLEVEL = 0xFF
+
+  import sys
+  import time
+
+  from unitree_sdk2py.comm.motion_switcher.motion_switcher_client import MotionSwitcherClient
+  from unitree_sdk2py.core.channel import (ChannelFactoryInitialize,
+                                           ChannelPublisher, ChannelSubscriber)
+  from unitree_sdk2py.go2.sport.sport_client import SportClient
+  from unitree_sdk2py.utils.crc import CRC
+
+  class Custom:
+      def __init__(self):
+          self.crc = CRC()
+
+      def Init(self):
+          self.sc = SportClient()
+          self.sc.SetTimeout(5.0)
+          self.sc.Init()
+          print("SportClient initialized")
+
+          self.sc.StandDown()
+          time.sleep(1)
+
+  if __name__ == '__main__':
+
+      print("WARNING: Please ensure that you know what you are doing!")
+      input("Press Enter to continue...")
+
+      if len(sys.argv)>1:
+          ChannelFactoryInitialize(0, sys.argv[1])
+      else:
+          ChannelFactoryInitialize(0)
+
+      print("Initialized!")
+      custom = Custom()
+      print("SportClient created")
+      custom.Init()
+      print("Go2 ready for SportMode release")
+      time.sleep(1)
+      print("Done!")
+      sys.exit(-1)
+      time.sleep(1)
+#+END_SRC
+{: file="/laydown.py" }
+
+Similarly, you can make the robot stand up safely by replacing line 23 with:
+
+#+BEGIN_SRC python
+self.sc.StandUp()
+#+END_SRC
+
+** Disabling Sport Mode
+
+to disable the sport mode i wrote the following script, which uses the MotionSwitcherClient to transition from high-level to low-level control safely:
+#+BEGIN_SRC python
+  # ===============================================================
+  #  Purpose: Disable Sport Mode on Unitree Go2 and enable low-level control
+  #  Author: Eric Elbing, 2025
+  #  License: Provided as-is, no warranty. Use at your own risk.
+  # ===============================================================
+  HIGHLEVEL = 0xEE
+  LOWLEVEL = 0xFF
+
+  import sys
+  import time
+
+  from unitree_sdk2py.comm.motion_switcher.motion_switcher_client import MotionSwitcherClient
+  from unitree_sdk2py.core.channel import (ChannelFactoryInitialize,
+                                           ChannelPublisher, ChannelSubscriber)
+  from unitree_sdk2py.go2.sport.sport_client import SportClient
+  from unitree_sdk2py.utils.crc import CRC
+
+
+  class Custom:
+      def __init__(self):
+          self.crc = CRC()
+
+      def Init(self):
+          self.msc = MotionSwitcherClient()
+          self.msc.SetTimeout(5.0)
+          self.msc.Init()
+          print("MotionSwitcher initialized")
+
+          self.msc.ReleaseMode()
+          time.sleep(1)
+
+  if __name__ == '__main__':
+
+      print("WARNING: Please ensure that you know what you are doing!")
+      input("Press Enter to continue...")
+
+      if len(sys.argv)>1:
+          ChannelFactoryInitialize(0, sys.argv[1])
+      else:
+          ChannelFactoryInitialize(0)
+
+      print("Initialized!")
+      custom = Custom()
+      print("SportClient created")
+      custom.Init()
+      print("SportMode released")
+      time.sleep(1)
+      print("Done!")
+      sys.exit(-1)
+      time.sleep(1)
+#+END_SRC
+{: file="/disable_sport_mode.py" }
+
+Once executed, the Go2 is unlocked and ready to receive low-level motion commands using ROS.
+Below is an example demonstrating the “Stand Up” procedure, controlled by my reinforcement learning agent—a set of neural networks capable of walking in different styles:
+
+[[file:/assets/images/go2_standup.GIF]]

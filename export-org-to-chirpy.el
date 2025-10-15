@@ -87,20 +87,26 @@
         (let ((url (match-string 1)))
           (replace-match (format "<%s>" url) t t)))
 
-      ;; 5) Convert src blocks to fenced code blocks
-      ;;    Collect src-blocks then replace from end -> start to keep positions valid
+      ;; 5) Replace org src blocks with fenced code, trim only the last empty line
       (let* ((parsed (org-element-parse-buffer))
-              (repls '()))
+              (repls nil))  ;; initialize properly
+
+        ;; Collect all source blocks
         (org-element-map parsed 'src-block
           (lambda (src)
             (let* ((beg (org-element-property :begin src))
                     (end (org-element-property :end src))
                     (lang (string-trim (or (org-element-property :language src) "")))
                     (code (org-element-property :value src))
-                    (fenced (concat "```" (if (string= lang "") "" lang) "\n" code "\n```\n")))
-              (push (list beg end fenced) repls))))
-        ;; sort by beg descending and apply
-        (setq repls (sort repls (lambda (a b) (> (car a) (car b)))))
+                    ;; remove exactly one trailing newline if present
+                    (code (replace-regexp-in-string "\n\\'" "" code))
+                    (fenced (concat "```" lang "\n" code "\n```\n")))
+              (setq repls (cons (list beg end fenced) repls)))))
+
+        ;; Sort blocks in reverse buffer order
+        (setq repls (sort repls #'(lambda (a b) (> (car a) (car b)))))
+
+        ;; Replace blocks in buffer
         (dolist (rp repls)
           (let ((beg (nth 0 rp))
                  (end (nth 1 rp))
@@ -109,6 +115,7 @@
               (goto-char beg)
               (delete-region beg end)
               (insert fenced)))))
+
 
       ;; 6) Convert LaTeX inline/display math
       (goto-char (point-min))
@@ -122,6 +129,15 @@
       (goto-char (point-min))
       (while (re-search-forward "\\(\\s-\\|^\\)\\]\\s-*\n" nil t)
         (replace-match "\n"))
+
+      ;; Convert Org headings (** ***) to Markdown (# ##)
+      (goto-char (point-min))
+      (while (re-search-forward "^\\(\\*+\\) \\(.*\\)$" nil t)
+        (let* ((stars (match-string 1))
+                (level (length stars))
+                (text (match-string 2))
+                (md-heading (concat (make-string level ?#) " " text)))
+          (replace-match md-heading)))
 
       ;; 7) Gather final content and write output file with YAML
       (let ((content (buffer-string))
