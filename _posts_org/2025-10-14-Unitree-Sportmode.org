@@ -69,7 +69,7 @@ When you release Sport Mode, the motors are no longer actively actuated. The rob
 #+END_SRC
 {: file="/laydown.py" }
 
-Similarly, you can make the robot stand up safely by replacing line 23 with:
+Similarly, you can make the robot stand up safely by replacing line 28 with:
 
 #+BEGIN_SRC python
 self.sc.StandUp()
