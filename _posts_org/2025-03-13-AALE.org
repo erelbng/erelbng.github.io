@@ -8,5 +8,3 @@
 I am honored to announce that my master's thesis has been nominated for the prestigious Student Award 2025 at the 21st Conference on Applied Automation in Teaching and Development [[https://www.htw-dresden.de/aale2025][AALE]]. The event took place from March 12–14, 2025, at the University of Applied Sciences Dresden, with a thematic focus on human-centered automation in the digital age.
 
 The Student Award recognizes outstanding academic achievements in the field of automation technology. As part of the nomination, I was invited to present the key findings of my thesis to an expert audience, fostering valuable academic exchange and networking opportunities.
-
-[[file:/assets/images/aale_urkunde.png]]
