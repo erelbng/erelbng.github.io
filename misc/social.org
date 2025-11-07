@@ -1,0 +1,24 @@
+#+TITLE: Eric Elbing
+#+NICK: ric
+#+DESCRIPTION: I like mechanical engineering, mechatronics and nature!
+#+AVATAR: https://ric.engineering/assets/images/profile.png
+#+LINK: https://ric.engineering
+
+#+FOLLOW: sachac https://sachachua.com/social.org
+#+FOLLOW: planet-emacs-life https://org-mode.org-social.org/
+
+
+* Posts
+Not sure how much I'll post here, but you can find my blog at https://sachachua.com/blog .
+
+** 
+:PROPERTIES:
+:ID: 2025-11-07T08:15:39+0100
+:TAGS: 
+:CLIENT: org-social.el
+:MOOD: 📡
+:END:
+
+This is my first Post.
+
+I'm not sure how aktive I'll be here, but you can find my blog at https://ric.engineering.
