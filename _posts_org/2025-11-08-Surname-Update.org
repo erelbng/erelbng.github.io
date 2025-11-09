@@ -1,5 +1,5 @@
 #+TITLE: A Personal Update on My Name
-#+DATE: 2025-11-06
+#+DATE: 2025-11-08
 #+TAGS: miscellaneous, about me
 #+CATEGORIES: Blog
 #+IMAGE_PATH: /assets/images/surname.jpg
