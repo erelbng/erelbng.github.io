@@ -1,6 +1,6 @@
 #+TITLE: How to disable sport mode on the Go2 - Low level control
 #+DATE: 2025-10-15
-#+CATEGORIES: Blog
+#+CATEGORIES: Tutorial
 #+TAGS: research
 #+IMAGE_PATH: /assets/images/go2.png
 #+IMAGE_ALT: Go2 low level control

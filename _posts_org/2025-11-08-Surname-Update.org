@@ -1,0 +1,12 @@
+#+TITLE: A Personal Update on My Name
+#+DATE: 2025-11-06
+#+TAGS: miscellaneous, about me
+#+CATEGORIES: Blog
+#+IMAGE_PATH: /assets/images/surname.jpg
+#+IMAGE_ALT: new name, same roots
+
+In this post, I would like to share a brief update regarding a recent change to my name.
+
+Until November 2025, I was known as Eric **Elbing**. I have since formally changed my surname to **Plaß**.
+
+All official records and publications going forward will appear under the name Eric Plaß. However, previous work released under my former name remain an integral part of my academic and professional background. Where relevant, I will continue to reference both names to ensure clarity and continuity.
