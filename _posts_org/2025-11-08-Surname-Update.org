@@ -2,8 +2,6 @@
 #+DATE: 2025-11-08
 #+TAGS: miscellaneous, about me
 #+CATEGORIES: Blog
-#+IMAGE_PATH: /assets/images/surname.jpg
-#+IMAGE_ALT: new name, same roots
 
 In this post, I would like to share a brief update regarding a recent change to my name.
 
