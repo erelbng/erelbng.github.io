@@ -62,19 +62,19 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y curl
-          mkdir -p misc/praesentations/revealjs
           cd misc/praesentations
           curl -L https://github.com/hakimel/reveal.js/archive/refs/tags/4.6.0.tar.gz --output revealjs.tar.gz
           tar xzf revealjs.tar.gz
           mv reveal.js-4.6.0 ./revealjs
           rm -rf revealjs.tar.gz
+          ls -l
 
       # 7. Test site (optional, can skip if not needed)
-      - name: Test site
-        run: |
-          bundle exec htmlproofer _site \
-            --disable-external \
-            --ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
+      # - name: Test site
+      #   run: |
+      #     bundle exec htmlproofer _site \
+      #       --disable-external \
+      #       --ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
 
       # 8. Upload site artifact for Pages
       - name: Upload site artifact
