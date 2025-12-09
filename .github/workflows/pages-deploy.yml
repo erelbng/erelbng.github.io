@@ -66,8 +66,8 @@ jobs:
           cd misc/praesentations
           curl -L https://github.com/hakimel/reveal.js/archive/refs/tags/4.6.0.tar.gz --output revealjs.tar.gz
           tar xzf revealjs.tar.gz
-          mv reveal.js-4.6.0/revealjs ./revealjs
-          rm -rf reveal.js-4.6.0 revealjs.tar.gz
+          mv reveal.js-4.6.0 ./revealjs
+          rm -rf revealjs.tar.gz
 
       # 7. Test site (optional, can skip if not needed)
       - name: Test site
