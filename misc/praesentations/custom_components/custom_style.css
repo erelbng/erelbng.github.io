@@ -1,0 +1,122 @@
+.fragment.blur {
+		filter: blur(5px);
+}
+
+.fragment.blur.visible {
+		filter: none;
+}
+
+.quote-gallery {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+		justify-content: center;
+		align-items: stretch;
+		margin-top: 1em;
+}
+
+.quote-gallery blockquote{
+		background: #515151;
+		border-left: 4px solid #ccc;
+		padding: 1em;
+		width: 30%;
+		min-width: 250px;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		font-style: italic;
+		font-size: medium;
+		position: relative;
+}
+
+.quote-gallery blockquote footer {
+		margin-top: 0.5em;
+		font-size: small;
+		text-align: right;
+		color: #8d8d8d;
+}
+
+/* Header */
+.slide-header {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 100;       /* high z-index to appear above slides */
+    font-size: 18px;
+    font-weight: bold;
+    color: #8d8d8d;
+    background: transparent; /* no background */
+    pointer-events: none;    /* let clicks pass through */
+}
+
+/* Footer */
+.slide-footer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+    z-index: 100;        /* high z-index to appear above slides */
+    font-size: 10px;
+    color: #555;
+    background: transparent; /* no background */
+    pointer-events: none;    /* clicks pass through */
+}
+
+.slide-footer .footer-images {
+    display: flex;
+    gap: 10px;
+}
+
+.slide-footer img {
+    height: 50px;
+    width: auto;
+}
+
+
+/* Header */
+.slide-header {
+    position: fixed;       /* fixed position above slides */
+    top: 0;
+    left: 0; right: 0;
+    z-index: 100;          /* above slide content */
+    pointer-events: none;   /* don’t block interactions */
+    transition: none !important;  /* disable any Reveal animation */
+}
+
+/* Footer */
+.slide-footer {
+    position: fixed;       /* fixed position below slides */
+    bottom: 0;
+    left: 0; right: 0;
+    z-index: 100;
+    pointer-events: none;
+    transition: none !important;  /* disable animation */
+}
+
+
+#header-left {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    color: #555;
+}
+
+#header-right {
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    color: #555;
+}
+
+#footer-left {
+    position: absolute;
+    bottom: 0%;
+    left: 0%;
+    color: #555;
+}

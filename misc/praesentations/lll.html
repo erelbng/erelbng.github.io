@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Reinforcement Learning Overview</title>
+<meta name="author" content="Eric Elbing"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./revealjs/dist/reveal.css"/>
+
+<link rel="stylesheet" href="./revealjs/dist/theme/black.css" id="theme"/>
+
+<link rel="stylesheet" href="./custom_components/custom_style.css"/>
+<link rel="stylesheet" href="./revealjs/plugin/highlight/zenburn.css"/><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section>
+<section id="slide-orgf3f2651">
+<h2 id="orgf3f2651">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik</h2>
+<aside class="notes">
+<p>
+Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik
+Teilthema meiner Promotion
+</p>
+
+<ul>
+<li>Relevanz des Themas
+<ul>
+<li>Firmen die Humanoide Roboter Konstruieren, Figure AI, Tesla, Boston Dynamics, Booster, Unitree</li>
+<li>GPU Hardware immer Performanter -&gt; RL lohnt sich immer mehr</li>
+<li>BMW und Mercedes Benz testen bereits Technologien im Werk</li>
+<li>Forschungsbedarf bei Sicherheit und Nachvollziehbarkeit</li>
+<li><a href="https://rodneybrooks.com/why-todays-humanoids-wont-learn-dexterity/">https://rodneybrooks.com/why-todays-humanoids-wont-learn-dexterity/</a></li>
+<li>&#x2026;</li>
+
+</ul></li>
+
+</ul>
+
+<p>
+kurz zu meiner Person
+</p>
+<ul>
+<li>Eric Elbing, Maschinenbau HTWK
+<ul>
+<li>Martin Gürtler, Professur Produktions- und Logistiksysteme</li>
+<li>Einsatz in Logistik und Produktion (Anwendung von Reinforcement-Learning, Regelungstechnik/Systemtheorie, Simulationsverfahren)</li>
+
+</ul></li>
+
+</ul>
+<p>
+ca. 1min.30s (1min.30s)
+</p>
+
+</aside>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org80ed2de">
+<h2 id="org80ed2de">Inhalt</h2>
+<aside class="notes">
+<p>
+Gliederung:
+</p>
+<ul>
+<li>kurze Einführung in Reinforcement Learning</li>
+<li>Anwendung bei mobilen Robotern</li>
+<li>aktuelle Forschungsthemen</li>
+<li>damits nicht langweilig wird: wie lange um laufen lernen?</li>
+
+</ul>
+<p>
+ca. 30s (2min.)
+</p>
+
+</aside>
+<ul>
+<li>Was ist Reinforcement Learning?</li>
+<li>Reinforcement Learning bei mobilen Robotern</li>
+<li>Aktuelle Themen</li>
+<li>Wie lange braucht man um laufen zu lernen?</li>
+
+</ul>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org8dabce2">
+<h2 id="org8dabce2">Was ist Reinforcement Learning?</h2>
+<aside class="notes">
+<ul>
+<li>kommt aus Psychologie -&gt; bestärkendes Lernen -&gt; Konditionierung</li>
+<li>Urvater: B.F. Skinner (Skinner Box) -&gt; Trainieren von Tauben (Tauben lernen, das Aufleuchten der Lampe mit der Futtergabe zu verbinden)
+<ul>
+<li>Mensch/Tier zeigt Verhaltensweise häufiger/seltener, durch Belohnung/Bestrafung.</li>
+<li>Verhaltensweise -&gt; Konsequenz -&gt; neue Verhaltensweise</li>
+<li>Tauben die Ping Pong spielen</li>
+<li>Tauben die Raketen lenken -&gt; proto-kybernetische kamikaze tauben</li>
+<li>2024 ignobel</li>
+
+</ul></li>
+<li>Lässt sich gut mathematisch ausdrücken -&gt; Sequenzen</li>
+
+</ul>
+<p>
+ca. 1min.30s (3min.30s)
+</p>
+
+</aside>
+<div style="display: grid; grid-template-columns: auto auto;">
+
+<div id="org37dcc31" class="figure">
+<p><img src="./assets/pigeon_in_skinnerBox.jpg" alt="pigeon_in_skinnerBox.jpg" height="80%," width="80%" align="center" />
+</p>
+</div>
+<ul>
+<li><b>operante Konditionierung</b>
+<ul>
+<li>"Programmiertes Lernen"</li>
+<li>"Reinforcement Learning"</li>
+
+</ul></li>
+
+</ul>
+<div style="font-size: 20%;">
+<p>
+<a href="https://www.deutschlandfunk.de/der-psychologe-burrhus-frederic-skinner-vater-des-100.html">Der Psychologe Burrhus Frederic Skinner, Vater des „programmierten Lernens“, Deutschlandfunk</a>
+</p>
+</div>
+</div>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org6eab604">
+<h2 id="org6eab604">Was ist Reinforcement Learning?</h2>
+<aside class="notes">
+<ul>
+<li>kommt aus Psychologie -&gt; bestärkendes Lernen -&gt; Konditionierung</li>
+<li>Urvater: B.F. Skinner (Skinner Box) -&gt; Trainieren von Tauben (Tauben lernen, das Aufleuchten der Lampe mit der Futtergabe zu verbinden)
+<ul>
+<li>Mensch/Tier zeigt Verhaltensweise häufiger/seltener, durch Belohnung/Bestrafung.</li>
+<li>Verhaltensweise -&gt; Konsequenz -&gt; neue Verhaltensweise</li>
+<li>Tauben die Ping Pong spielen</li>
+<li>Tauben die Raketen lenken -&gt; proto-kybernetische kamikaze tauben</li>
+<li>2024 ignobel</li>
+
+</ul></li>
+<li>Lässt sich gut mathematisch ausdrücken -&gt; Sequenzen</li>
+
+</ul>
+<p>
+ca. 1min.30s (3min.30s)
+</p>
+
+</aside>
+
+<p>
+ <video data-autoplay controls loop muted width= 60% src= ./assets/BFSkinnerPigeonPingPong.mp4></video>
+</p>
+
+<div style="font-size: 20%;">
+<p>
+<a href="https://www.youtube.com/embed/vGazyH6fQQ4">BF Skinner Foundation - Pigeon Ping Pong Clip, Youtube</a>
+</p>
+</div>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org0bd9a09">
+<h2 id="org0bd9a09">Markov Decision Process</h2>
+<aside class="notes">
+<ul>
+<li>Beschreibt ein Markov Decision Process -&gt; Grundlage für RL</li>
+<li>Aktor tätigt Aktion, bekommt einen neuen Zustanz und ein Reward signal als folge der Aktion von Umgebung zurück</li>
+<li>Taube -&gt; Futter</li>
+<li>Regler -&gt; Abstand zur Sollgröße</li>
+<li>Squenzielle Charakteristik</li>
+
+</ul>
+<p>
+ca. 1min (4min.30s)
+</p>
+
+</aside>
+
+
+<div id="org921f8f8" class="figure">
+<p><img src="assets/mdp.svg" alt="mdp.svg" class="org-svg" height="30%," width="30%" align="center" />
+</p>
+</div>
+
+<p>
+mit State \(S_t\), Action \(A_t\) und Reward \(R_t\),
+</p>
+
+<p>
+sodass \[S_0, A_0, R_1, S_1, A_1, R_2, S_2, A_2, R_3, ..., R_T\]
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org9c25432">
+<h2 id="org9c25432">Reward&#x2026;</h2>
+<aside class="notes">
+<ul>
+<li>ganz natürlich will man Gewinn maximieren</li>
+<li>genauer: Gewinn über gesamten Zeitraum, nicht kurzfristig!</li>
+
+</ul>
+<p>
+ca. 30s (5min.)
+</p>
+
+</aside>
+<p>
+Reward = Gewinn \(\Rightarrow\) MAXIMIEREN!
+</p>
+
+<p>
+\(G_t=R_{t+1}+R_{t+2}+ R_{t+3}+ ... + R_{T}\)
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org25a7c26">
+<h2 id="org25a7c26">&#x2026; was könnte wohl schief gehen?</h2>
+<aside class="notes">
+<ul>
+<li>schlankes Framework/einfache Idee</li>
+<li>auf Umsetzung kommt es an</li>
+<li>Konstruktion der Umgebung:
+<ul>
+<li>Beispiel: Taube soll Fliegen lernen</li>
+
+</ul></li>
+
+</ul>
+<p>
+ca. 1min. (6min.)    
+</p>
+
+</aside>
+
+<div id="org8a56a70" class="figure">
+<p><img src="./assets/pigeon_glitch.png" alt="pigeon_glitch.png" class="fragment appear" height="50%," width="50%" align="center" />
+</p>
+</div>
+
+<div style="font-size: 20%;">
+<p>
+<a href="https://www.reddit.com/r/blursedimages/comments/ex0imh/blursed_pigeon/">Bildquelle</a>
+</p>
+</div>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section data-transition="zoom">
+<section id="slide-org557180f" data-transition="zoom">
+<h2 id="org557180f">RL bei Robotern</h2>
+<aside class="notes">
+<ul>
+<li>wie kann man das nun bei Robotern nutzen?</li>
+
+</ul>
+
+</aside>
+
+<div id="org3e9ab49" class="figure">
+<p><img src="assets/mdp.svg" alt="mdp.svg" class="org-svg" height="30%," width="30%" align="center" />
+</p>
+</div>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section data-transition="zoom">
+<section id="slide-org7d420c7" data-transition="zoom">
+<h2 id="org7d420c7">RL bei Robotern</h2>
+<aside class="notes">
+<ul>
+<li>Agent = Roboter</li>
+<li>Umgebung = Simulation/Realität</li>
+<li>Reward -&gt; Aufgabe</li>
+<li>auf Folie: verschiedenste Lücken für Forschungsbedarf</li>
+
+</ul>
+<p>
+ca. 1min. (7min.)
+</p>
+
+</aside>
+
+<div id="org7835aef" class="figure">
+<p><img src="assets/mdp2.svg" alt="mdp2.svg" class="org-svg" height="80%," width="80%" align="center" />
+</p>
+</div>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org6d14575">
+<h2 id="org6d14575">Fragestellungen</h2>
+<aside class="notes">
+<ul>
+<li>daraus entstehen ganz natürlich mehrere Fragestellungen</li>
+<li>wir beschäftigen uns mit Fragestellungen</li>
+<li>Abbildung der Umgebung: Wie Detailgetreu muss ein Regal sein?</li>
+
+</ul>
+<p>
+ca. 30s (7min.30s)
+</p>
+
+</aside>
+<div style="font-size: 80%;">
+<ul>
+<li>Abbildung der Umgebung
+<ul>
+<li>Grenze zwischen Agent und Umgebung</li>
+<li>Implementation im Framework</li>
+<li>Simulation der Umgebung</li>
+
+</ul></li>
+<li>Beschreibung der Aufgabe/-n
+<ul>
+<li>als einzelnes numerisches Signal</li>
+
+</ul></li>
+<li>Architekturen
+<ul>
+<li>Multi-Agenten Systeme</li>
+<li>Hierarchisches Reinforcement Learning</li>
+<li>Agenten-Architektur (MLP, CNN, Transformer)</li>
+
+</ul></li>
+
+</ul>
+</div>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-orgee4946c">
+<h2 id="orgee4946c">Aktuelle Themen</h2>
+<aside class="notes">
+<ul>
+<li>daraus ergeben sich aktuelle Themen
+<ul>
+<li>in letzten Monaten bearbeitet</li>
+
+</ul></li>
+
+</ul>
+<p>
+ca. 1min. (8min.30s)
+</p>
+
+</aside>
+<ul>
+<li>Reinforcement Learning im Allgemeinen
+<ul>
+<li>Konzepte/Frameworks</li>
+<li>Implementation</li>
+<li>Benchmarking</li>
+
+</ul></li>
+<li>Überführung in die Realität "SIM2REAL"
+<ul>
+<li>Implementation in ROS</li>
+
+</ul></li>
+
+</ul>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org5997ff3">
+<h2 id="org5997ff3">Reinforcement Learning Allgemein</h2>
+<aside class="notes">
+<ul>
+<li>Implementation von neuronalen Netzen in Robotern?</li>
+<li>ROS</li>
+<li>Unterschied zu anderen Reglern</li>
+
+</ul>
+<p>
+ca. 20s (8min.50s)
+</p>
+
+</aside>
+<div style="display: grid; grid-template-columns: auto auto;">
+
+<p>
+ <video data-autoplay loop muted width= 150% src= ./assets/policy_lqr_animation.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay loop muted width= 150% src= ./assets/policy_ppo_animation.mp4></video>
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-orgf0a6bc0">
+<h2 id="orgf0a6bc0">Unterschied zu anderen Reglern?</h2>
+<aside class="notes">
+<ul>
+<li>Unterschied zu anderen Reglern</li>
+<li>nicht abheben wie die Taube</li>
+
+</ul>
+<p>
+ca. 10s (8min.)
+</p>
+
+</aside>
+<p height="90%," width="90%" align="center">
+ <video data-autoplay controls width= 100% src= ./assets/LQR_PPO_RENDER_2.mp4></video>
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-orga78bc51">
+<h2 id="orga78bc51">Reward Funktion</h2>
+<aside class="notes">
+<ul>
+<li>Allgemeine Konstruktion der Funktion</li>
+<li>Einfluss auf
+<ul>
+<li>Trainingsdauer</li>
+<li>Performance</li>
+<li>&#x2026;</li>
+
+</ul></li>
+<li>Zeigen an nachfolgenden Beispielen</li>
+
+</ul>
+<p>
+ca. 30s (8min.30s)
+</p>
+
+</aside>
+<div style="display: grid; grid-template-columns: 60% 40%;">
+<ul>
+<li>Konstruktion der Funktion</li>
+<li>Einfluss der Funktion auf das Training</li>
+
+</ul>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org4b883eb">
+<h2 id="org4b883eb">SIM2REAL</h2>
+<aside class="notes">
+<ul>
+<li>Einfluss der Reward Funktion auf Übertragbarkeit in Realität</li>
+<li>Konstruktion der Umgebung</li>
+<li>Einfacher Anfang: TurtleBot im Kreis fahren lassen (auf Basis von Beschleunigungswerten)</li>
+
+</ul>
+<p>
+ca. 1min. (9min.30s)
+</p>
+
+</aside>
+<div style="display: grid; grid-template-columns: 60% 40%;">
+
+<p>
+Mehrere Fragestellungen:
+</p>
+<ul>
+<li>RL auf realen Systemen</li>
+<li>Implementation in ROS</li>
+<li>am Beispiel des TurtleBot4</li>
+
+</ul>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org9dd13c8">
+<h2 id="org9dd13c8">sim&#x2026;</h2>
+<aside class="notes">
+<ul>
+<li>eigene Forschung bei SIM2REAL</li>
+<li>Einfacher Anfang: TurtleBot im Kreis fahren lassen (auf Basis von Beschleunigungswerten)</li>
+<li>Entwickeln und Prüfen verschiedener Methoden</li>
+
+</ul>
+
+</aside>
+<div style="display: grid; grid-template-columns: 50% 50%;">
+<p>
+ <video data-autoplay loop muted width= 80% src= ./assets/tb4_bad_sim.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay loop muted width= 80% src= ./assets/tb4_good_sim.mp4></video>
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org7a86ab0">
+<h2 id="org7a86ab0">&#x2026;2real</h2>
+<div style="display: grid; grid-template-columns: 50% 50%;">
+<p>
+ <video data-autoplay loop muted width= 80% src= ./assets/tb4_real_first.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay loop muted width= 80% src= ./assets/tb4_real_final.mp4></video>
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org3d06f6b">
+<h2 id="org3d06f6b">Digitaler Zwilling</h2>
+<aside class="notes">
+<ul>
+<li>alles fließt in digitalen Zwilling zusammen</li>
+<li>fundierte Basis fuer neue Konzepte</li>
+
+</ul>
+
+</aside>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-orgbe17fad">
+<h2 id="orgbe17fad">&#x2026; eines Roboterarms</h2>
+<aside class="notes">
+<ul>
+<li>Roboterarm: komplexer als TurtleBot</li>
+<li>Allerdings fest montiert (Spannzange)</li>
+
+</ul>
+
+</aside>
+<div style="display: grid; grid-template-columns: 50% 50%;">
+<p>
+ <video data-autoplay loop muted width= 80% src= ./assets/so100_shadow_sim_full.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay loop muted width= 80% src= ./assets/so100_shadow_real_full.mp4></video>
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org0507814">
+<h2 id="org0507814">&#x2026; eines Roboterarms</h2>
+<aside class="notes">
+<ul>
+<li>Im Logistischen Kontext dort mit RL schon viel Möglich</li>
+<li>Beispiel: Griff in die Kiste</li>
+<li>später: Arm auf mobiler Basis</li>
+
+</ul>
+
+</aside>
+<div style="display: grid; grid-template-columns: 50% 50%;">
+<p>
+ <video data-autoplay loop muted width= 80% src= ./assets/so100_twin_sim_full.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay loop muted width= 80% src= ./assets/so100_twin_real_full.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay loop muted width= 80% src= ./assets/so100_twin_sim_2_full.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay loop muted width= 80% src= ./assets/so100_twin_real_2_full.mp4></video>
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+<section id="slide-orgba728b9">
+<h3 id="orgba728b9">Live Demo</h3>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-orgcccf83b">
+<h2 id="orgcccf83b">&#x2026; eines mobilen Roboters</h2>
+<aside class="notes">
+<ul>
+<li>Tatsächlich ein mobiler Roboter mit Arm (hier noch nicht modelliert)</li>
+<li>Vision des mobilen Einlegeautomaten -&gt; mehrere Stockwerke und Hindernisse überwinden</li>
+<li>nicht nur glatten, ebenen Hallenboden</li>
+
+</ul>
+
+</aside>
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/go2_twin.mp4></video>
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+<section id="slide-orgb4588fc">
+<h3 id="orgb4588fc">Live Demo</h3>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org48ba25a">
+<h2 id="org48ba25a">Laufen lernen</h2>
+<p>
+Wie lange braucht man um laufen zu lernen?
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-orga594fbf">
+<h2 id="orga594fbf">einfacher Fall</h2>
+<aside class="notes">
+<ul>
+<li>einfaches Laufen
+<ul>
+<li>vorwärts/rückwärts</li>
+
+</ul></li>
+
+</ul>
+
+<p>
+39 million 419 thousand 904
+3,5min. trainiert
+39419904*(1/60)*seconds = 7.6days simulated
+BUT 4096 Robots -&gt; *4096 perceived timesteps
+85.33 years
+</p>
+
+</aside>
+
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/go2_walk_basic_genesis.mp4></video>
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-orga3a6c3e">
+<h2 id="orga3a6c3e">einfacher Fall</h2>
+<aside class="notes">
+<p>
+39419904*(1/60)*seconds = 7.6days simulated
+BUT 4096 Robots -&gt; *4096 perceived timesteps
+85.33 years
+</p>
+
+<p>
+3,5min. trainiert
+</p>
+
+<p>
+39 million 419 thousand 904
+</p>
+
+</aside>
+<div style="font-size: 60%;">
+<div class="org-src-container">
+
+<pre   ><code class="text" >################################################################################
+                       Learning iteration 400/401                       
+
+                       Computation: 199913 steps/s (collection: 0.255s, learning 0.236s)
+               Value function loss: 0.0000
+                    Surrogate loss: 0.0030
+             Mean action noise std: 0.15
+                 Mean total reward: 21.26
+               Mean episode length: 1001.00
+ Mean episode rew_tracking_lin_vel: 0.9888
+ Mean episode rew_tracking_ang_vel: 0.1983
+        Mean episode rew_lin_vel_z: -0.0067
+      Mean episode rew_base_height: -0.0049
+      Mean episode rew_action_rate: -0.0118
+Mean episode rew_similar_to_default: -0.1005
+--------------------------------------------------------------------------------
+                   Total timesteps: 39419904
+                    Iteration time: 0.49s
+                        Total time: 209.38s
+                               ETA: 0.5s
+</code></pre>
+</div>
+</div>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-org5faeed3">
+<h2 id="org5faeed3">komplexer Fall</h2>
+<aside class="notes">
+<ul>
+<li>mehrere Laufarten
+27 Stunden trainiert RTX 3080 10GB RAM</li>
+
+</ul>
+<p>
+3262531200*(1/60)*seconds = 629.3 days = 1.7241 years simulated
+4096 roboter -&gt; 7062 years
+</p>
+
+</aside>
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/go2_walk_ways_zoom.mp4></video>
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-orge3808a9">
+<h2 id="orge3808a9">komplexer Fall</h2>
+<aside class="notes">
+<p>
+3262531200*(1/60)*seconds = 629.3 days = 1.7241 years simulated
+4096 roboter -&gt; 7062 years
+</p>
+
+<p>
+27 Stunden trainiert RTX 3080 10GB RAM
+</p>
+
+<p>
+3 billion 262 million 531 thousand 200
+</p>
+
+</aside>
+<div style="font-size: 50%;">
+<div class="org-src-container">
+
+<pre   ><code class="text" >╒═════════════════════════════════════════════════════╤════════════════════╕
+│       train/episode/rew tracking lin vel/mean       │       13.591       │
+├─────────────────────────────────────────────────────┼────────────────────┤
+│       train/episode/rew tracking ang vel/mean       │        5.35        │
+├─────────────────────────────────────────────────────┼────────────────────┤
+............................................................................
+├─────────────────────────────────────────────────────┼────────────────────┤
+│     train/episode/rew orientation control/mean      │       -2.868       │
+├─────────────────────────────────────────────────────┼────────────────────┤
+│            train/episode/rew total/mean             │        4.42        │
+├─────────────────────────────────────────────────────┼────────────────────┤
+............................................................................
+├─────────────────────────────────────────────────────┼────────────────────┤
+│                  time elapsed/mean                  │     118538.365     │
+├─────────────────────────────────────────────────────┼────────────────────┤
+│                   time iter/mean                    │       5.207        │
+├─────────────────────────────────────────────────────┼────────────────────┤
+............................................................................
+├─────────────────────────────────────────────────────┼────────────────────┤
+│                      timesteps                      │     3262531200     │
+├─────────────────────────────────────────────────────┼────────────────────┤
+│                     iterations                      │       19990        │
+╘═════════════════════════════════════════════════════╧════════════════════╛
+</code></pre>
+</div>
+</div>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-orgc34f3ac">
+<h2 id="orgc34f3ac">Vielen Dank für Ihre Aufmerksamkeit</h2>
+<p>
+ <video data-autoplay controls loop muted width= 80% src= ./assets/go2_standup.mp4></video>
+</p>
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+<section>
+<section id="slide-orgce98f37">
+<h2 id="orgce98f37">Vielen Dank für Ihre Aufmerksamkeit</h2>
+<hr />
+
+<p>
+Eric Plaß, FING, Nieper-Bau N108
+</p>
+
+<hr />
+<div class="slide-footer">Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler</div>
+</section>
+</section>
+</div>
+</div>
+<script src="./revealjs/dist/reveal.js"></script>
+<script src="./revealjs/plugin/markdown/markdown.js"></script>
+<script src="./revealjs/plugin/highlight/highlight.js"></script>
+<script src="./revealjs/plugin/notes/notes.js"></script>
+<script src="./revealjs/plugin/zoom/zoom.js"></script>
+
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom],
+slideNumber:true
+});
+
+</script>
+</body>
+</html>

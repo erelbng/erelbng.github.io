@@ -1,0 +1,936 @@
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: ./revealjs/
+#+REVEAL_THEME: black
+#+REVEAL_PLUGINS: (markdown highlight notes zoom)
+#+REVEAL_EXTRA_CSS: ./custom_components/custom_style.css
+#+REVEAL_EXTRA_SCRIPTS: ./custom_components/custom_script.js
+#+REVEAL_SLIDE_FOOTER: Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik | M.Eng. Eric Plaß | Prof. Dr. André Ludwig | Prof. Dr. rer. nat. Martin Gürtler
+#+REVEAL_INIT_OPTIONS: slideNumber:true
+#+MACRO: draw_color white
+#+MACRO: bg_color black
+#+MACRO: qoute_gallery @@html: <div class="quote-gallery">@@
+#+MACRO: r_stack @@html: <div class="r-stack">@@
+#+MACRO: end_diff  @@html: </div>@@
+#+MACRO: blur @@html: <span class="fragment custom blur">$1</span>@@
+#+MACRO: video @@html: <video $1 width=$2 src=$3></video>@@
+:END:
+#+TITLE: Reinforcement Learning Overview
+#+AUTHOR: Eric Elbing
+#+OPTIONS: toc:nil num:nil reveal_global_header:t reveal_global_footer:t reveal_title_slide:nil 
+
+#+BEGIN_COMMENT
+Vortrag im Logistics Living Lab der Universität Leipzig
+Zeitrahmen ca. 30 min.
+#+END_COMMENT
+
+* Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik
+#+BEGIN_NOTES
+Einsatz von Reinforcement Learning für die Steuerung mobiler Roboter in der Logistik
+Teilthema meiner Promotion
+
+- Relevanz des Themas
+  - Firmen die Humanoide Roboter Konstruieren, Figure AI, Tesla, Boston Dynamics, Booster, Unitree
+  - GPU Hardware immer Performanter -> RL lohnt sich immer mehr
+  - BMW und Mercedes Benz testen bereits Technologien im Werk
+  - Forschungsbedarf bei Sicherheit und Nachvollziehbarkeit
+  - https://rodneybrooks.com/why-todays-humanoids-wont-learn-dexterity/
+  - ...
+
+kurz zu meiner Person
+- Eric Elbing, Maschinenbau HTWK
+  - Martin Gürtler, Professur Produktions- und Logistiksysteme
+  - Einsatz in Logistik und Produktion (Anwendung von Reinforcement-Learning, Regelungstechnik/Systemtheorie, Simulationsverfahren)
+ca. 1min.30s (1min.30s)
+#+END_NOTES
+* Inhalt
+#+BEGIN_NOTES
+Gliederung:
+  - kurze Einführung in Reinforcement Learning
+  - Anwendung bei mobilen Robotern
+  - aktuelle Forschungsthemen
+  - damits nicht langweilig wird: wie lange um laufen lernen?
+ca. 30s (2min.)
+#+END_NOTES
+- Was ist Reinforcement Learning?
+- Reinforcement Learning bei mobilen Robotern
+- Aktuelle Themen
+- Wie lange braucht man um laufen zu lernen?
+
+* Was ist Reinforcement Learning?
+#+BEGIN_NOTES
+- kommt aus Psychologie -> bestärkendes Lernen -> Konditionierung
+- Urvater: B.F. Skinner (Skinner Box) -> Trainieren von Tauben (Tauben lernen, das Aufleuchten der Lampe mit der Futtergabe zu verbinden)
+  - Mensch/Tier zeigt Verhaltensweise häufiger/seltener, durch Belohnung/Bestrafung.
+  - Verhaltensweise -> Konsequenz -> neue Verhaltensweise
+  - Tauben die Ping Pong spielen
+  - Tauben die Raketen lenken -> proto-kybernetische kamikaze tauben
+  - 2024 ignobel
+- Lässt sich gut mathematisch ausdrücken -> Sequenzen
+ca. 1min.30s (3min.30s)
+#+END_NOTES
+#+REVEAL_HTML: <div style="display: grid; grid-template-columns: auto auto;">
+#+ATTR_HTML: :height 80%, :width 80% :align center
+[[./assets/pigeon_in_skinnerBox.jpg]]
+- *operante Konditionierung*
+  - "Programmiertes Lernen"
+  - "Reinforcement Learning"
+#+REVEAL_HTML: <div style="font-size: 20%;">
+[[https://www.deutschlandfunk.de/der-psychologe-burrhus-frederic-skinner-vater-des-100.html][Der Psychologe Burrhus Frederic Skinner, Vater des „programmierten Lernens“, Deutschlandfunk]]
+#+REVEAL_HTML: </div>
+#+REVEAL_HTML: </div>
+
+* Was ist Reinforcement Learning?
+#+BEGIN_NOTES
+- kommt aus Psychologie -> bestärkendes Lernen -> Konditionierung
+- Urvater: B.F. Skinner (Skinner Box) -> Trainieren von Tauben (Tauben lernen, das Aufleuchten der Lampe mit der Futtergabe zu verbinden)
+  - Mensch/Tier zeigt Verhaltensweise häufiger/seltener, durch Belohnung/Bestrafung.
+  - Verhaltensweise -> Konsequenz -> neue Verhaltensweise
+  - Tauben die Ping Pong spielen
+  - Tauben die Raketen lenken -> proto-kybernetische kamikaze tauben
+  - 2024 ignobel
+- Lässt sich gut mathematisch ausdrücken -> Sequenzen
+ca. 1min.30s (3min.30s)
+#+END_NOTES
+
+{{{video(data-autoplay controls loop muted, 60%, ./assets/BFSkinnerPigeonPingPong.mp4)}}}
+
+#+REVEAL_HTML: <div style="font-size: 20%;">
+[[https://www.youtube.com/embed/vGazyH6fQQ4][BF Skinner Foundation - Pigeon Ping Pong Clip, Youtube]]
+#+REVEAL_HTML: </div>
+
+* Markov Decision Process
+#+BEGIN_NOTES
+- Beschreibt ein Markov Decision Process -> Grundlage für RL
+- Aktor tätigt Aktion, bekommt einen neuen Zustanz und ein Reward signal als folge der Aktion von Umgebung zurück
+- Taube -> Futter
+- Regler -> Abstand zur Sollgröße
+- Squenzielle Charakteristik
+ca. 1min (4min.30s)
+#+END_NOTES
+
+#+name: mdp
+#+header: :results file link
+#+header: :file assets/mdp.svg
+#+BEGIN_SRC latex
+  \definecolor{mydark}{RGB}{25,25,25}
+  \definecolor{mybright}{RGB}{255,255,255}
+  %\definecolor{mybright}{RGB}{25,25,25}
+  %\definecolor{mydark}{RGB}{255,255,255}
+  \tikzset{
+          main/.style={
+            draw,
+            rounded corners=2pt,
+            fill=mydark,
+            align=center,
+            font=\small,
+            inner sep=8pt,
+            minimum width=3cm,
+            minimum height=1.2cm
+          },
+          category/.style={
+            draw,
+            rounded corners=8pt,
+            fill=cyan!15,
+            align=center,
+            font=\small,
+            text width=4cm,
+            inner sep=4pt
+          },
+          arrow/.style={
+            -{Stealth[length=3mm,width=2mm]},
+            thick,
+          },
+          dashedarrow/.style={
+            -{Stealth[length=3mm,width=2mm]},
+            dashed,
+          }
+        }
+        \begin{tikzpicture}[invert, node distance=1cm and 1.2cm]
+        \node[mybright, main] (agent) {\textbf{Agent}\\Policy, $\pi$};
+        \node[mybright, main, below=1cm of agent] (env) {\textbf{Environment}\\Dynamics\\$p(s',r \mid s,a)$};
+
+
+        \draw [mybright, dashed] (-3.0,-3.25) -- (-3.0,-1.5);
+        \draw [mybright,->, >=Stealth] (-1.5,-2) -- (-3.0,-2) node[pos=0.5, fill=mydark]{$S_{t+1}$};
+        \draw [mybright,->, >=Stealth] (-1.5,-2.75) -- (-3.0,-2.75) node[pos=0.5, fill=mydark]{$R_{t+1}$};
+
+        \draw [mybright] (-3.0,-2.0) -- (-3.5,-2.0);
+        \draw [mybright] (-3.5,-2.0) -- (-3.5,-0.25) node[pos=0.5, fill=mydark] (s) {$S_t$};
+
+        \draw [mybright] (-3.0,-2.75) -- (-4.25,-2.75);
+        \draw [mybright] (-4.25,-2.75) -- (-4.25,0.25) node[pos=0.55, fill=mydark] (r) {$R_t$};
+
+        \draw [mybright,->, >=Stealth] (-3.5,-0.25) -- (-1.5,-0.25);
+        \draw [mybright,->, >=Stealth] (-4.25,0.25) -- (-1.5,0.25);
+
+        \draw [mybright,->, >=Stealth] (2,-2.5) -- (1.5,-2.5);
+        \draw [mybright] (2.0,-2.5) -- (2.0,0.0) node[pos=0.5, fill=mydark] (a) {$A_t$};
+        \draw [mybright] (1.5,0.0) -- (2.0,0.0);
+
+        \end{tikzpicture}
+#+END_SRC
+
+#+ATTR_HTML: :height 30%, :width 30% :align center
+#+RESULTS: mdp
+[[file:assets/mdp.svg]]
+
+mit State $S_t$, Action $A_t$ und Reward $R_t$,
+
+sodass $$S_0, A_0, R_1, S_1, A_1, R_2, S_2, A_2, R_3, ..., R_T$$
+
+* Reward...
+#+BEGIN_NOTES
+- ganz natürlich will man Gewinn maximieren
+- genauer: Gewinn über gesamten Zeitraum, nicht kurzfristig!
+ca. 30s (5min.)
+#+END_NOTES
+Reward = Gewinn $\Rightarrow$ MAXIMIEREN!
+
+$G_t=R_{t+1}+R_{t+2}+ R_{t+3}+ ... + R_{T}$
+
+* ... was könnte wohl schief gehen?
+#+BEGIN_NOTES
+- schlankes Framework/einfache Idee
+- auf Umsetzung kommt es an
+- Konstruktion der Umgebung:
+  - Beispiel: Taube soll Fliegen lernen
+ca. 1min. (6min.)    
+#+END_NOTES
+#+ATTR_REVEAL: :frag appear
+#+ATTR_HTML: :height 50%, :width 50% :align center
+[[./assets/pigeon_glitch.png]]
+
+#+ATTR_REVEAL: :frag appear
+#+REVEAL_HTML: <div style="font-size: 20%;">
+[[https://www.reddit.com/r/blursedimages/comments/ex0imh/blursed_pigeon/][Bildquelle]]
+#+REVEAL_HTML: </div>
+
+* RL bei Robotern
+:PROPERTIES:
+:REVEAL_DATA_TRANSITION: zoom
+:END:
+#+BEGIN_NOTES
+- wie kann man das nun bei Robotern nutzen?
+#+END_NOTES
+#+ATTR_HTML: :height 30%, :width 30% :align center
+[[file:assets/mdp.svg]]
+
+* RL bei Robotern
+:PROPERTIES:
+:REVEAL_DATA_TRANSITION: zoom
+:END:
+#+BEGIN_NOTES
+- Agent = Roboter
+- Umgebung = Simulation/Realität
+- Reward -> Aufgabe
+- auf Folie: verschiedenste Lücken für Forschungsbedarf
+ca. 1min. (7min.)
+#+END_NOTES
+#+name: mdp2
+#+header: :results file link
+#+header: :file assets/mdp2.svg
+#+ATTR_REVEAL: :data_id foo1
+#+BEGIN_SRC latex
+  \definecolor{mydark}{RGB}{25,25,25}
+  \definecolor{mybright}{RGB}{255,255,255}
+  %\definecolor{mybright}{RGB}{25,25,25}
+  %\definecolor{mydark}{RGB}{255,255,255}
+  \tikzset{
+          main/.style={
+            draw,
+            rounded corners=2pt,
+            fill=mydark,
+            align=center,
+            font=\small,
+            inner sep=8pt,
+            minimum width=3cm,
+            minimum height=1.2cm
+          },
+          category/.style={
+            draw,
+            rounded corners=8pt,
+            fill=mydark!85,
+            align=center,
+            font=\small,
+            text width=4cm,
+            inner sep=4pt
+          },
+          arrow/.style={
+            -{Stealth[length=3mm,width=2mm]},
+            thick,
+          },
+          dashedarrow/.style={
+            -{Stealth[length=3mm,width=2mm]},
+            dashed,
+          }
+        }
+        \begin{tikzpicture}[invert, node distance=1cm and 1.2cm]
+        \node[mybright, main] (agent) {\textbf{Agent}\\Policy, $\pi$};
+        \node[mybright, main, below=1cm of agent] (env) {\textbf{Environment}\\Dynamics\\$p(s',r \mid s,a)$};
+
+
+        \draw [mybright, dashed] (-3.0,-3.25) -- (-3.0,-1.5);
+        \draw [mybright,->, >=Stealth] (-1.5,-2) -- (-3.0,-2) node[pos=0.5, fill=mydark]{$S_{t+1}$};
+        \draw [mybright,->, >=Stealth] (-1.5,-2.75) -- (-3.0,-2.75) node[pos=0.5, fill=mydark]{$R_{t+1}$};
+
+        \draw [mybright] (-3.0,-2.0) -- (-3.5,-2.0);
+        \draw [mybright] (-3.5,-2.0) -- (-3.5,-0.25) node[pos=0.5, fill=mydark] (s) {$S_t$};
+
+        \draw [mybright] (-3.0,-2.75) -- (-4.25,-2.75);
+        \draw [mybright] (-4.25,-2.75) -- (-4.25,0.25) node[pos=0.55, fill=mydark] (r) {$R_t$};
+
+        \draw [mybright,->, >=Stealth] (-3.5,-0.25) -- (-1.5,-0.25);
+        \draw [mybright,->, >=Stealth] (-4.25,0.25) -- (-1.5,0.25);
+
+        \draw [mybright,->, >=Stealth] (2,-2.5) -- (1.5,-2.5);
+        \draw [mybright] (2.0,-2.5) -- (2.0,0.0) node[pos=0.5, fill=mydark] (a) {$A_t$};
+        \draw [mybright] (1.5,0.0) -- (2.0,0.0);
+
+        \node[mybright, category, right=of a, xshift=1cm, yshift=2cm] (tasks) {Task-/Application-specific\\[3pt]
+          {\footnotesize Locomotion, Manipulation, Navigation, ...}};
+        \draw[mybright, dashedarrow] (agent.north east) to[bend left] (tasks.north);
+
+        
+        \node[mybright, category, below=of env] (sim) {Simulation\\[3pt]
+          {\footnotesize Isaac Sim, MuJoCo, Genesis, Kubric}};
+        \node[mybright, category, right=of sim, xshift=1.1cm] (real) {Reality\\[3pt]
+          {\footnotesize Dreamer, ...}};
+        \draw [mybright, <->, >=Stealth, dashed] (sim.east) -- (real.west) node[pos=0.5] (simreal);
+        \draw[mybright, dashedarrow] (env.south) -- (sim.north);
+        \node[mybright, category, below=of simreal, yshift=-0.5cm] (sim2real) {SIM2REAL\\[3pt]
+          {\footnotesize Domain Randomization, Fine-Tuning, RL + Imitation, Meta-RL}};
+        \draw[mybright, dashedarrow] (simreal.south) -- (sim2real.north);
+        \draw[mybright, dashedarrow] (env.south) -- (real.north);
+
+        \node[mybright, category, above=of agent] (hri) {Human-Robot Interaction\\[3pt]
+          {\footnotesize Co-navigation, Collaborative Manipulation, Socially-aware Navigation}};
+        \draw[mybright, dashedarrow] (hri.south) -- (agent.north);
+
+        \node[mybright, category, left=of r, xshift=2cm, yshift=-4cm] (benchmark) {Benchmarking\\[3pt]
+          {\footnotesize Locomotion, Manipulation, Navigation \\ Metrics, Reproducibility, Comparison}};
+
+        \draw[mybright, dashedarrow] (r.west) to[bend right=20] (benchmark.north);
+
+        \node[mybright, category, left=of r, xshift=2cm, yshift=4cm] (arch) {Policy\\[3pt]
+          {\footnotesize MLP, Decision-Transformer, ...}};
+
+        \draw[mybright, dashedarrow] (agent.north west) to[bend left=20] (arch.south);
+
+
+        \end{tikzpicture}
+#+END_SRC
+
+#+ATTR_HTML: :height 80%, :width 80% :align center
+#+RESULTS: mdp2
+[[file:assets/mdp2.svg]]
+
+* Fragestellungen
+#+BEGIN_NOTES
+- daraus entstehen ganz natürlich mehrere Fragestellungen
+- wir beschäftigen uns mit Fragestellungen
+- Abbildung der Umgebung: Wie Detailgetreu muss ein Regal sein?
+ca. 30s (7min.30s)
+#+END_NOTES
+#+REVEAL_HTML: <div style="font-size: 80%;">
+- Abbildung der Umgebung
+  - Grenze zwischen Agent und Umgebung
+  - Implementation im Framework
+  - Simulation der Umgebung
+- Beschreibung der Aufgabe/-n
+  - als einzelnes numerisches Signal
+- Architekturen
+  - Multi-Agenten Systeme
+  - Hierarchisches Reinforcement Learning
+  - Agenten-Architektur (MLP, CNN, Transformer)
+#+REVEAL_HTML: </div>
+    
+* Aktuelle Themen
+#+BEGIN_NOTES
+- daraus ergeben sich aktuelle Themen
+  - in letzten Monaten bearbeitet
+ca. 1min. (8min.30s)
+#+END_NOTES
+- Reinforcement Learning im Allgemeinen
+  - Konzepte/Frameworks
+  - Implementation
+  - Benchmarking
+- Überführung in die Realität "SIM2REAL"
+  - Implementation in ROS
+
+* Reinforcement Learning Allgemein
+#+BEGIN_NOTES
+- Implementation von neuronalen Netzen in Robotern?
+- ROS
+- Unterschied zu anderen Reglern
+ca. 20s (8min.50s)
+#+END_NOTES
+#+REVEAL_HTML: <div style="display: grid; grid-template-columns: auto auto;">
+
+#+name: lqr
+#+BEGIN_SRC python :results silent :exports none
+  import math
+  import scipy
+  import numpy as np
+  import pandas as pd
+  import random
+  import mujoco
+  import matplotlib.pyplot as plt
+  from matplotlib import cm
+  from matplotlib import animation
+
+  # Configure matplotlib for LaTeX rendering and dark theme
+  plt.rcParams.update({
+      "text.usetex": True,
+      "font.family": "Helvetica"
+  })
+  plt.rc('text', usetex=True)
+  plt.rc('font', family='serif')
+  plt.style.use('dark_background')
+  bg_color = (25/255, 25/255, 25/255)  # RGB in [0,1]
+
+  # Load MuJoCo model and initialize data
+  model = mujoco.MjModel.from_xml_path('./custom_components/pendulum/rotary_inverted_pendulum.xml')
+  data = mujoco.MjData(model)
+
+  # Reset simulation
+  mujoco.mj_resetDataKeyframe(model, data, 0)
+  mujoco.mj_forward(model, data)
+
+  # Inverse dynamics calculation at equilibrium
+  data.qacc = 0
+  mujoco.mj_inverse(model, data)
+  qpos0 = data.qpos.copy() # save initial joint positions
+  ctrl0 = np.array([0]) # save control input at equilibrium
+
+  # Reset simulation
+  nv = model.nv # save number of degrees of freedom
+  mujoco.mj_resetData(model, data)
+
+  data.qpos = qpos0 # set position to equilibrium
+  mujoco.mj_forward(model, data) # simulate for one step
+
+  # Compute Jacobians
+  jac_com = np.zeros((3, nv))
+  mujoco.mj_jacSubtreeCom(model, data, jac_com, model.body('base').id) # for CoM of base
+
+  jac_rotpen = np.zeros((3, nv))
+  mujoco.mj_jacBodyCom(model, data, jac_rotpen, None, model.body('rotpen').id) # for CoM of rotary's arm
+
+  jac_pend = np.zeros((3, nv))
+  mujoco.mj_jacBodyCom(model, data, jac_pend, None, model.body('pendulum').id)  # for CoM of pendulum
+
+  # Define balance cost using Jacobian difference
+  jac_diff = jac_com - jac_rotpen # Difference between base and rotary arm Jacobians
+  Qbalance = jac_diff.T @ jac_diff # Quadratic cost for balancing
+
+  nu = model.nu # Number of control inputs
+  R = np.eye(nu) # Control cost identity matrix
+
+  joint_names = [model.joint(i).name for i in range(model.njnt)]
+
+  # Define state cost matrices
+  BALANCE_COST = 1000
+  BALANCE_JOINT_COST = 1
+
+  Qjoint = np.eye(nv)
+  Qjoint[0, 0] *= BALANCE_COST
+  Qjoint[1, 1] *= BALANCE_JOINT_COST
+
+  Qpos = BALANCE_COST * Qbalance + Qjoint # Combine balance and joint costs
+  # Full state weighting matrix Q (for [qpos; qvel])
+  Q = np.block([[Qpos, np.zeros((nv, nv))], [np.zeros((nv, 2*nv))]])
+
+  # Linearize the system using finite differences
+  mujoco.mj_resetData(model, data)
+  data.ctrl = ctrl0
+  data.qpos = qpos0
+
+  A = np.zeros((2*nv, 2*nv))
+  B = np.zeros((2*nv, nu))
+  epsilon = 1e-6
+  flg_centered = True
+
+  # Linearize around equilibrium (A and B matrices)
+  mujoco.mjd_transitionFD(model, data, epsilon, flg_centered, A, B, None, None)
+
+  # Solve the discrete-time Algebraic Riccati Equation for LQR
+  P = scipy.linalg.solve_discrete_are(A, B, Q, R)
+
+  # Compute LQR gain matrix K
+  K = np.linalg.inv(R + B.T @ P @ B) @ B.T @ P @ A
+
+  dq = np.zeros(model.nv) # Placeholder for derivative of qpos
+
+  # Plot the policy
+  detail = 40 # Resolution of the grid
+
+  obs_0 = np.linspace(-math.radians(40), math.radians(40), detail)
+  obs_1 = np.linspace(-math.radians(40), math.radians(40), detail)
+
+  pend_vel_values = np.linspace(-5.0, 5.0, 40)   # rad/s
+  Z_slices = []
+
+  X, Y = np.meshgrid(obs_0, obs_1)
+  Z = np.zeros_like(X)
+
+  for dpq in pend_vel_values:
+      Z = np.zeros_like(X)
+      for i in range(len(obs_0)):
+          for j in range(len(obs_1)):
+              data.qpos = qpos0.copy()
+              data.qvel[:] = 0.0
+              data.qpos[0] = obs_0[i] # Set pendulum angle
+              data.qpos[1] = obs_1[j] # Set base angle
+              data.qvel[0] = dpq # Set pendulum velocity
+              mujoco.mj_differentiatePos(model, dq, 1, qpos0, data.qpos)
+              dx = np.hstack((dq, data.qvel)).T
+              data.ctrl = ctrl0 - K @ dx # LQR control law
+              Z[i][j] = data.ctrl[0] # Store control output for visualization
+              Z[i][j] = np.clip(data.ctrl[0], -math.radians(180), math.radians(180)) # Clip data for real system
+              # keep in mind that K is computed for an unconstrained linear system
+      Z_slices.append(Z)
+          
+
+  fig = plt.figure(facecolor=bg_color)
+  ax = fig.add_subplot(111, projection='3d', facecolor=bg_color)
+
+  # ax.plot_surface(X, Y, Z, cmap='viridis')
+  surf = [ax.plot_surface(X, Y, Z_slices[0], cmap=cm.viridis)]
+
+  ax.set_xlabel('angle in rad of pendulum')
+  ax.set_ylabel('angle in rad of base')
+  ax.set_zlabel('action')
+
+  ax.zaxis.labelpad=-0.7
+
+  ax.set_zlim(-math.radians(180), math.radians(180))
+
+  ax.set_title(f'LQR Policy on pendulum velocity = {pend_vel_values[0]:.2f} rad/s')
+
+  plt.tight_layout()
+
+  # Update function for animation
+  def update(frame):
+      surf[0].remove() 
+      surf[0] = ax.plot_surface(X, Y, Z_slices[frame], cmap=cm.viridis)
+      ax.set_title(f'LQR Policy on pendulum velocity = {pend_vel_values[frame]:.2f} rad/s')
+      ax.set_zlim(-math.radians(180), math.radians(180))
+      return surf[0],
+
+  # Animate and save as MP4
+  anim = animation.FuncAnimation(
+      fig, update,
+      frames=len(pend_vel_values),
+      interval=100,     # ms between frames
+      blit=False
+  )
+
+  anim.save("./assets/policy_lqr_animation.mp4", writer='ffmpeg', fps=15, dpi=300)
+#+END_SRC
+
+{{{video(data-autoplay loop muted, 150%, ./assets/policy_lqr_animation.mp4)}}}
+
+#+name: ppo
+#+BEGIN_SRC python :results silent :exports none
+    import math
+    import scipy
+    import numpy as np
+    import pandas as pd
+    import random
+    import mujoco
+    import matplotlib.pyplot as plt
+    from matplotlib import cm
+    from matplotlib import animation
+    import gymnasium
+    from typing import Dict, Optional, Tuple, Union
+    from stable_baselines3 import PPO, A2C
+
+
+    # Configure matplotlib for LaTeX rendering and dark theme
+    plt.rcParams.update({
+        "text.usetex": True,
+        "font.family": "Helvetica"
+    })
+    plt.rc('text', usetex=True)
+    plt.rc('font', family='serif')
+    plt.style.use('dark_background')
+    bg_color = (25/255, 25/255, 25/255)  # RGB in [0,1]
+
+
+    class InvertedPendulum(gymnasium.Env):
+
+        def __init__(self, rew_func="1", ros=False, BALANCE_STD=0.0):
+            self.model = mujoco.MjModel.from_xml_path('./custom_components/pendulum/rotary_inverted_pendulum.xml')
+            self.sim = mujoco.MjData(self.model)
+            self.qpos0 = self.sim.nqpos.copy()
+            self.init_qpos = self.sim.qpos.ravel().copy()
+            self.init_qvel = self.sim.qvel.ravel().copy()
+            self.observation_space = gymnasium.spaces.Box(low=-np.inf, high=np.inf, shape=(4,), dtype=np.float64)
+            self._set_action_space()
+            self._max_episode_time_sec = 10.0
+            self._step = 0
+            self.ros = ros
+            self.rew_func = rew_func
+
+            self.nu = self.model.nu
+            np.random.seed(1)
+            self.nsteps = int(np.ceil(self._max_episode_time_sec/self.model.opt.timestep))
+            self.perturb = np.random.randn(self.nsteps, self.nu)
+            self.CTRL_STD = np.empty(self.nu)
+            self.BALANCE_STD = BALANCE_STD
+            self.CTRL_RATE = 0.8
+            for i in range(self.nu):
+                joint = self.model.actuator(i).trnid[0]
+                dof = self.model.joint(joint).dofadr[0]
+                self.CTRL_STD[i] = self.BALANCE_STD
+            width = int(self.nsteps * self.CTRL_RATE/self._max_episode_time_sec)
+            kernel = np.exp(-0.5*np.linspace(-3, 3, width)**2)
+            kernel /= np.linalg.norm(kernel)
+            for i in range(self.nu):
+                self.perturb[:, i] = np.convolve(self.perturb[:, i], kernel, mode='same')
+            # self.imu = Turtlebot4IMU()
+
+        def _set_action_space(self):
+            bounds = self.model.actuator_ctrlrange.copy().astype(np.float32)
+            low, high = bounds.T
+            self.action_space = gymnasium.spaces.Box(low=low, high=high, dtype=np.float32)
+            return self.action_space
+
+        def reset(self, *, seed: Optional[int]=None, options: Optional[dict]=None):
+            super().reset(seed=seed)
+            mujoco.mj_resetData(self.model, self.sim)
+            ob = self.reset_model()
+            info = self._get_reset_info()
+            mujoco.mj_forward(self.model, self.sim)
+            self._step = 0
+            return ob, info
+
+        def reset_model(self):
+            qpos = self.init_qpos + self.np_random.uniform(size=self.model.nq, low=-0.01, high=0.01)
+            qvel = self.init_qvel + self.np_random.uniform(size=self.model.nv, low=-0.01, high=0.01)
+            qpos[7] = random.uniform(-math.radians(180), math.radians(180))
+            qpos[8] = random.uniform(-math.radians(20), math.radians(20))
+            self.sim.qpos[:] = np.copy(qpos)
+            self.sim.qvel[:] = np.copy(qvel)
+            mujoco.mj_forward(self.model, self.sim)
+            return self._get_obs()
+
+        def _get_obs(self):
+            if self.ros:
+                # sensor_values = self._get_ros_obs()
+                sensor_values = self.sim.sensordata
+            else:
+                sensor_values = self.sim.sensordata
+            return sensor_values
+
+        # def _get_ros_obs(self):
+        #     sensor_values = self.imu.return_sensor_readings()
+        #     result = []
+        #     for i in range(0, len(sensor_values)):
+        #         value = sensor_values[i]
+        #         transformed_value = value
+        #         result.append(transformed_value)
+        #     transfomed_values = np.array(result)
+        #     return transfomed_values
+
+        def _get_reset_info(self) -> Dict[str, float]:
+            return {}
+
+        def step(self, action):
+            self._step += 1
+            if self._step < self.nsteps:
+                action += self. CTRL_STD * self.perturb[self._step]
+            self.do_simulation(action)
+            ob = self._get_obs()
+            terminated = bool(self.sim.time >= self._max_episode_time_sec or self._step >= self.nsteps or abs(ob[1]) > math.radians(30) or abs(ob[0]) > math.radians(100))
+            reward = eval(self.rew_func)
+            info = {"reward_survive": reward}
+            return ob, reward, terminated, False, info
+
+        def do_simulation(self, ctrl):
+            self.sim.ctrl[:] = ctrl
+            mujoco.mj_step(self.model,self.sim)
+
+        def vels(self, speed, turn):
+            return 'currently:\tspeed %s\tturn %s ' % (speed, turn)
+
+    # Train Model
+    rew_func = "1 - 0.9*((np.abs(ob[1]) % (2 * math.pi))/math.pi) - 0.1*((np.abs(ob[0]) % (2 * math.pi))/math.pi)-0.01*ob[3]**2-0.001*ob[2]**2"
+
+    n_timesteps = 1e6
+
+    env = InvertedPendulum(rew_func)
+    # model = A2C("MlpPolicy", env, verbose=0)
+    # model.learn(total_timesteps=n_timesteps)
+    # model.save(f"./custom_components/rotary_inverted_pendulum_PPO")
+    model = A2C.load(f"./custom_components/rotary_inverted_pendulum_A2C", env)
+
+    # Plot the policy
+    detail = 20 # Resolution of the grid
+
+    obs_0 = np.linspace(-math.radians(40), math.radians(40), detail)
+    obs_1 = np.linspace(-math.radians(40), math.radians(40), detail)
+
+    pend_vel_values = np.linspace(-5.0, 5.0, 40)   # rad/s
+    Z_slices = []
+
+    X, Y = np.meshgrid(obs_0, obs_1)
+    Z = np.zeros_like(X)
+
+    for dpq in pend_vel_values:
+        Z = np.zeros_like(X)
+        for i in range(len(obs_0)):
+            for j in range(len(obs_1)):
+                env.sim.qpos = env.qpos0.copy()
+                env.sim.qvel[:] = 0.0
+                env.sim.qpos[0] = obs_0[i] # Set pendulum angle
+                env.sim.qpos[1] = obs_1[j] # Set base angle
+                env.sim.qvel[0] = dpq # Set pendulum velocity
+                action, _ = model.predict([env.sim.qpos[0], env.sim.qpos[1], dpq, 0])
+                Z[i][j] = action # Store control output for visualization
+                Z[i][j] = np.clip(action, -math.radians(180), math.radians(180)) # Clip data for real system
+                # keep in mind that K is computed for an unconstrained linear system
+        Z_slices.append(Z)
+                
+    fig = plt.figure(facecolor=bg_color)
+    ax = fig.add_subplot(111, projection='3d', facecolor=bg_color)
+
+    # ax.plot_surface(X, Y, Z, cmap='viridis')
+    surf = [ax.plot_surface(X, Y, Z_slices[0], cmap=cm.viridis)]
+
+    ax.set_xlabel('angle in rad of pendulum')
+    ax.set_ylabel('angle in rad of base')
+    ax.set_zlabel('action')
+
+    ax.zaxis.labelpad=-0.7
+
+    ax.set_title(f'LQR Policy on pendulum velocity = {pend_vel_values[0]:.2f} rad/s')
+    ax.set_zlim(-math.radians(180), math.radians(180))
+
+    plt.tight_layout()
+
+    # Update function for animation
+    def update(frame):
+        surf[0].remove() 
+        surf[0] = ax.plot_surface(X, Y, Z_slices[frame], cmap=cm.viridis)
+        ax.set_title(f'PPO Policy on pendulum velocity = {pend_vel_values[frame]:.2f} rad/s')
+        ax.set_zlim(-math.radians(180), math.radians(180))
+        return surf[0],
+
+    # Animate and save as MP4
+    anim = animation.FuncAnimation(
+        fig, update,
+        frames=len(pend_vel_values),
+        interval=100,     # ms between frames
+        blit=False
+    )
+
+    anim.save("./assets/policy_ppo_animation.mp4", writer='ffmpeg', fps=15, dpi=300)              
+
+#+END_SRC
+
+{{{video(data-autoplay loop muted, 150%, ./assets/policy_ppo_animation.mp4)}}}
+
+* Unterschied zu anderen Reglern?
+#+BEGIN_NOTES
+- Unterschied zu anderen Reglern
+- nicht abheben wie die Taube
+ca. 10s (8min.)
+#+END_NOTES
+#+ATTR_HTML: :height 90%, :width 90% :align center
+{{{video(data-autoplay controls, 100%, ./assets/LQR_PPO_RENDER_2.mp4)}}}
+
+* Reward Funktion
+#+BEGIN_NOTES
+- Allgemeine Konstruktion der Funktion
+- Einfluss auf
+  - Trainingsdauer
+  - Performance
+  - ...
+- Zeigen an nachfolgenden Beispielen
+ca. 30s (8min.30s)
+#+END_NOTES
+#+REVEAL_HTML: <div style="display: grid; grid-template-columns: 60% 40%;">
+- Konstruktion der Funktion
+- Einfluss der Funktion auf das Training
+
+* SIM2REAL
+#+BEGIN_NOTES
+- Einfluss der Reward Funktion auf Übertragbarkeit in Realität
+- Konstruktion der Umgebung
+- Einfacher Anfang: TurtleBot im Kreis fahren lassen (auf Basis von Beschleunigungswerten)
+ca. 1min. (9min.30s)
+#+END_NOTES
+#+REVEAL_HTML: <div style="display: grid; grid-template-columns: 60% 40%;">
+
+Mehrere Fragestellungen:
+- RL auf realen Systemen
+- Implementation in ROS
+- am Beispiel des TurtleBot4
+
+* sim...
+#+BEGIN_NOTES
+- eigene Forschung bei SIM2REAL
+- Einfacher Anfang: TurtleBot im Kreis fahren lassen (auf Basis von Beschleunigungswerten)
+- Entwickeln und Prüfen verschiedener Methoden
+#+END_NOTES
+#+REVEAL_HTML: <div style="display: grid; grid-template-columns: 50% 50%;">
+{{{video(data-autoplay loop muted, 80%, ./assets/tb4_bad_sim.mp4)}}}
+
+{{{video(data-autoplay loop muted, 80%, ./assets/tb4_good_sim.mp4)}}}
+
+* ...2real
+#+REVEAL_HTML: <div style="display: grid; grid-template-columns: 50% 50%;">
+{{{video(data-autoplay loop muted, 80%, ./assets/tb4_real_first.mp4)}}}
+
+{{{video(data-autoplay loop muted, 80%, ./assets/tb4_real_final.mp4)}}}
+
+* Digitaler Zwilling
+#+BEGIN_NOTES
+- alles fließt in digitalen Zwilling zusammen
+- fundierte Basis fuer neue Konzepte
+#+END_NOTES
+
+* ... eines Roboterarms
+#+BEGIN_NOTES
+- Roboterarm: komplexer als TurtleBot
+- Allerdings fest montiert (Spannzange)
+#+END_NOTES
+#+REVEAL_HTML: <div style="display: grid; grid-template-columns: 50% 50%;">
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_shadow_sim_full.mp4)}}}
+
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_shadow_real_full.mp4)}}}
+
+* ... eines Roboterarms
+#+BEGIN_NOTES
+- Im Logistischen Kontext dort mit RL schon viel Möglich
+- Beispiel: Griff in die Kiste
+- später: Arm auf mobiler Basis
+#+END_NOTES
+#+REVEAL_HTML: <div style="display: grid; grid-template-columns: 50% 50%;">
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_sim_full.mp4)}}}
+
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_real_full.mp4)}}}
+
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_sim_2_full.mp4)}}}
+
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_real_2_full.mp4)}}}
+
+** Live Demo
+* ... eines mobilen Roboters
+#+BEGIN_NOTES
+- Tatsächlich ein mobiler Roboter mit Arm (hier noch nicht modelliert)
+- Vision des mobilen Einlegeautomaten -> mehrere Stockwerke und Hindernisse überwinden
+- nicht nur glatten, ebenen Hallenboden
+#+END_NOTES
+{{{video(data-autoplay controls loop muted, 100%, ./assets/go2_twin.mp4)}}}
+** Live Demo
+* Laufen lernen
+Wie lange braucht man um laufen zu lernen?
+
+* einfacher Fall
+#+BEGIN_NOTES
+- einfaches Laufen
+  - vorwärts/rückwärts
+
+39 million 419 thousand 904
+3,5min. trainiert
+39419904*(1/60)*seconds = 7.6days simulated
+BUT 4096 Robots -> *4096 perceived timesteps
+85.33 years
+#+END_NOTES
+
+{{{video(data-autoplay controls loop muted, 100%, ./assets/go2_walk_basic_genesis.mp4)}}}
+
+* einfacher Fall
+#+BEGIN_NOTES
+39419904*(1/60)*seconds = 7.6days simulated
+BUT 4096 Robots -> *4096 perceived timesteps
+85.33 years
+
+3,5min. trainiert
+
+39 million 419 thousand 904
+#+END_NOTES
+#+REVEAL_HTML: <div style="font-size: 60%;">
+#+BEGIN_SRC text
+################################################################################
+                       Learning iteration 400/401                       
+
+                       Computation: 199913 steps/s (collection: 0.255s, learning 0.236s)
+               Value function loss: 0.0000
+                    Surrogate loss: 0.0030
+             Mean action noise std: 0.15
+                 Mean total reward: 21.26
+               Mean episode length: 1001.00
+ Mean episode rew_tracking_lin_vel: 0.9888
+ Mean episode rew_tracking_ang_vel: 0.1983
+        Mean episode rew_lin_vel_z: -0.0067
+      Mean episode rew_base_height: -0.0049
+      Mean episode rew_action_rate: -0.0118
+Mean episode rew_similar_to_default: -0.1005
+--------------------------------------------------------------------------------
+                   Total timesteps: 39419904
+                    Iteration time: 0.49s
+                        Total time: 209.38s
+                               ETA: 0.5s
+#+END_SRC
+#+REVEAL_HTML: </div>
+
+* komplexer Fall
+#+BEGIN_NOTES
+- mehrere Laufarten
+  27 Stunden trainiert RTX 3080 10GB RAM
+3262531200*(1/60)*seconds = 629.3 days = 1.7241 years simulated
+4096 roboter -> 7062 years
+ 
+#+END_NOTES
+{{{video(data-autoplay controls loop muted, 100%, ./assets/go2_walk_ways_zoom.mp4)}}}
+
+* komplexer Fall
+#+BEGIN_NOTES
+3262531200*(1/60)*seconds = 629.3 days = 1.7241 years simulated
+4096 roboter -> 7062 years
+
+27 Stunden trainiert RTX 3080 10GB RAM
+
+3 billion 262 million 531 thousand 200
+#+END_NOTES
+#+REVEAL_HTML: <div style="font-size: 50%;">
+#+BEGIN_SRC text
+  ╒═════════════════════════════════════════════════════╤════════════════════╕
+  │       train/episode/rew tracking lin vel/mean       │       13.591       │
+  ├─────────────────────────────────────────────────────┼────────────────────┤
+  │       train/episode/rew tracking ang vel/mean       │        5.35        │
+  ├─────────────────────────────────────────────────────┼────────────────────┤
+  ............................................................................
+  ├─────────────────────────────────────────────────────┼────────────────────┤
+  │     train/episode/rew orientation control/mean      │       -2.868       │
+  ├─────────────────────────────────────────────────────┼────────────────────┤
+  │            train/episode/rew total/mean             │        4.42        │
+  ├─────────────────────────────────────────────────────┼────────────────────┤
+  ............................................................................
+  ├─────────────────────────────────────────────────────┼────────────────────┤
+  │                  time elapsed/mean                  │     118538.365     │
+  ├─────────────────────────────────────────────────────┼────────────────────┤
+  │                   time iter/mean                    │       5.207        │
+  ├─────────────────────────────────────────────────────┼────────────────────┤
+  ............................................................................
+  ├─────────────────────────────────────────────────────┼────────────────────┤
+  │                      timesteps                      │     3262531200     │
+  ├─────────────────────────────────────────────────────┼────────────────────┤
+  │                     iterations                      │       19990        │
+  ╘═════════════════════════════════════════════════════╧════════════════════╛
+#+END_SRC
+#+REVEAL_HTML: </div>
+
+* Vielen Dank für Ihre Aufmerksamkeit
+{{{video(data-autoplay controls loop muted, 80%, ./assets/go2_standup.mp4)}}}
+
+* Vielen Dank für Ihre Aufmerksamkeit
+
+-----
+
+Eric Plaß, FING, Nieper-Bau N108
+
+-----

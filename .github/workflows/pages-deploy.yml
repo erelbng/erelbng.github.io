@@ -57,6 +57,18 @@ jobs:
       - name: Build Jekyll site
         run: bundle exec jekyll build -d "_site"
 
+      # 6.5 Download Reveal.js
+      - name: Download Reveal.js
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl
+          mkdir -p misc/praesentations/revealjs
+          cd misc/praesentations
+          curl -L https://github.com/hakimel/reveal.js/archive/refs/tags/4.6.0.tar.gz --output revealjs.tar.gz
+          tar xzf revealjs.tar.gz
+          mv reveal.js-4.6.0/revealjs ./revealjs
+          rm -rf reveal.js-4.6.0 revealjs.tar.gz
+
       # 7. Test site (optional, can skip if not needed)
       - name: Test site
         run: |
