@@ -16,7 +16,7 @@
 :END:
 #+TITLE: Reinforcement Learning Overview
 #+AUTHOR: Eric Elbing
-#+OPTIONS: toc:nil num:nil reveal_global_header:t reveal_global_footer:t reveal_title_slide:nil 
+#+OPTIONS: toc:nil num:nil reveal_global_header:t reveal_global_footer:t reveal_title_slide:nil
 
 #+BEGIN_COMMENT
 Vortrag im Logistics Living Lab der Universität Leipzig
@@ -194,7 +194,7 @@ $G_t=R_{t+1}+R_{t+2}+ R_{t+3}+ ... + R_{T}$
 - auf Umsetzung kommt es an
 - Konstruktion der Umgebung:
   - Beispiel: Taube soll Fliegen lernen
-ca. 1min. (6min.)    
+ca. 1min. (6min.)
 #+END_NOTES
 #+ATTR_REVEAL: :frag appear
 #+ATTR_HTML: :height 50%, :width 50% :align center
@@ -290,7 +290,7 @@ ca. 1min. (7min.)
           {\footnotesize Locomotion, Manipulation, Navigation, ...}};
         \draw[mybright, dashedarrow] (agent.north east) to[bend left] (tasks.north);
 
-        
+
         \node[mybright, category, below=of env] (sim) {Simulation\\[3pt]
           {\footnotesize Isaac Sim, MuJoCo, Genesis, Kubric}};
         \node[mybright, category, right=of sim, xshift=1.1cm] (real) {Reality\\[3pt]
@@ -343,7 +343,7 @@ ca. 30s (7min.30s)
   - Hierarchisches Reinforcement Learning
   - Agenten-Architektur (MLP, CNN, Transformer)
 #+REVEAL_HTML: </div>
-    
+
 * Aktuelle Themen
 #+BEGIN_NOTES
 - daraus ergeben sich aktuelle Themen
@@ -489,7 +489,7 @@ ca. 20s (8min.50s)
               Z[i][j] = np.clip(data.ctrl[0], -math.radians(180), math.radians(180)) # Clip data for real system
               # keep in mind that K is computed for an unconstrained linear system
       Z_slices.append(Z)
-          
+
 
   fig = plt.figure(facecolor=bg_color)
   ax = fig.add_subplot(111, projection='3d', facecolor=bg_color)
@@ -511,7 +511,7 @@ ca. 20s (8min.50s)
 
   # Update function for animation
   def update(frame):
-      surf[0].remove() 
+      surf[0].remove()
       surf[0] = ax.plot_surface(X, Y, Z_slices[frame], cmap=cm.viridis)
       ax.set_title(f'LQR Policy on pendulum velocity = {pend_vel_values[frame]:.2f} rad/s')
       ax.set_zlim(-math.radians(180), math.radians(180))
@@ -691,7 +691,7 @@ ca. 20s (8min.50s)
                 Z[i][j] = np.clip(action, -math.radians(180), math.radians(180)) # Clip data for real system
                 # keep in mind that K is computed for an unconstrained linear system
         Z_slices.append(Z)
-                
+
     fig = plt.figure(facecolor=bg_color)
     ax = fig.add_subplot(111, projection='3d', facecolor=bg_color)
 
@@ -711,7 +711,7 @@ ca. 20s (8min.50s)
 
     # Update function for animation
     def update(frame):
-        surf[0].remove() 
+        surf[0].remove()
         surf[0] = ax.plot_surface(X, Y, Z_slices[frame], cmap=cm.viridis)
         ax.set_title(f'PPO Policy on pendulum velocity = {pend_vel_values[frame]:.2f} rad/s')
         ax.set_zlim(-math.radians(180), math.radians(180))
@@ -725,7 +725,7 @@ ca. 20s (8min.50s)
         blit=False
     )
 
-    anim.save("./assets/policy_ppo_animation.mp4", writer='ffmpeg', fps=15, dpi=300)              
+    anim.save("./assets/policy_ppo_animation.mp4", writer='ffmpeg', fps=15, dpi=300)
 
 #+END_SRC
 
@@ -797,9 +797,9 @@ Mehrere Fragestellungen:
 - Allerdings fest montiert (Spannzange)
 #+END_NOTES
 #+REVEAL_HTML: <div style="display: grid; grid-template-columns: 50% 50%;">
-{{{video(data-autoplay loop muted, 80%, ./assets/so100_shadow_sim_full.mp4)}}}
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_shadow_sim_half.mp4)}}}
 
-{{{video(data-autoplay loop muted, 80%, ./assets/so100_shadow_real_full.mp4)}}}
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_shadow_real_half.mp4)}}}
 
 * ... eines Roboterarms
 #+BEGIN_NOTES
@@ -808,13 +808,13 @@ Mehrere Fragestellungen:
 - später: Arm auf mobiler Basis
 #+END_NOTES
 #+REVEAL_HTML: <div style="display: grid; grid-template-columns: 50% 50%;">
-{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_sim_full.mp4)}}}
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_sim_half.mp4)}}}
 
-{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_real_full.mp4)}}}
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_real_half.mp4)}}}
 
-{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_sim_2_full.mp4)}}}
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_sim_2_half.mp4)}}}
 
-{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_real_2_full.mp4)}}}
+{{{video(data-autoplay loop muted, 80%, ./assets/so100_twin_real_2_half.mp4)}}}
 
 ** Live Demo
 * ... eines mobilen Roboters
@@ -823,7 +823,7 @@ Mehrere Fragestellungen:
 - Vision des mobilen Einlegeautomaten -> mehrere Stockwerke und Hindernisse überwinden
 - nicht nur glatten, ebenen Hallenboden
 #+END_NOTES
-{{{video(data-autoplay controls loop muted, 100%, ./assets/go2_twin.mp4)}}}
+{{{video(data-autoplay controls loop muted, 100%, ./assets/go2_twin_mobile.mp4)}}}
 ** Live Demo
 * Laufen lernen
 Wie lange braucht man um laufen zu lernen?
@@ -855,7 +855,7 @@ BUT 4096 Robots -> *4096 perceived timesteps
 #+REVEAL_HTML: <div style="font-size: 60%;">
 #+BEGIN_SRC text
 ################################################################################
-                       Learning iteration 400/401                       
+                       Learning iteration 400/401
 
                        Computation: 199913 steps/s (collection: 0.255s, learning 0.236s)
                Value function loss: 0.0000
@@ -883,7 +883,7 @@ Mean episode rew_similar_to_default: -0.1005
   27 Stunden trainiert RTX 3080 10GB RAM
 3262531200*(1/60)*seconds = 629.3 days = 1.7241 years simulated
 4096 roboter -> 7062 years
- 
+
 #+END_NOTES
 {{{video(data-autoplay controls loop muted, 100%, ./assets/go2_walk_ways_zoom.mp4)}}}
 

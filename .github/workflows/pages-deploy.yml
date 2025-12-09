@@ -68,6 +68,7 @@ jobs:
           mv reveal.js-4.6.0 ./revealjs
           rm -rf revealjs.tar.gz
           ls -l
+          ls -l ./revealjs
 
       # 7. Test site (optional, can skip if not needed)
       # - name: Test site
