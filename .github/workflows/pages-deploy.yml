@@ -53,10 +53,6 @@ jobs:
       - name: Convert Org files to HTML/Markdown
         run: emacs --batch -l export-org-to-chirpy.el
 
-      # 6. Build the Jekyll site
-      - name: Build Jekyll site
-        run: bundle exec jekyll build -d "_site"
-
       # 6.5 Download Reveal.js
       - name: Download Reveal.js
         run: |
@@ -69,6 +65,10 @@ jobs:
           rm -rf revealjs.tar.gz
           ls -l
           ls -l ./revealjs
+
+      # 6. Build the Jekyll site
+      - name: Build Jekyll site
+        run: bundle exec jekyll build -d "_site"
 
       # 7. Test site (optional, can skip if not needed)
       # - name: Test site
