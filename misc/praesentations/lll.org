@@ -827,6 +827,8 @@ Mehrere Fragestellungen:
 ** Live Demo
 * Laufen lernen
 Wie lange braucht man um laufen zu lernen?
+Konzeptionell:
+{{{video(data-autoplay controls loop muted, 80%, ./assets/go_pre.mp4)}}}
 
 * einfacher Fall
 #+BEGIN_NOTES
@@ -934,3 +936,10 @@ Mean episode rew_similar_to_default: -0.1005
 Eric Plaß, FING, Nieper-Bau N108
 
 -----
+
+
+* Humanoide Roboter
+#+REVEAL_HTML: <div style="display: grid; grid-template-columns: 50% 50%;">
+{{{video(data-autoplay controls loop muted, 100%, ./assets/failedhumanoid.mp4)}}}
+
+{{{video(data-autoplay controls loop muted, 100%, ./assets/g1.mp4)}}}
