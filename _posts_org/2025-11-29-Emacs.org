@@ -1,6 +1,6 @@
 #+TITLE: Organizing my todo lists with emacs org mode
 #+DATE: 2025-11-29
-#+CATEGORIES: Tutorial
+#+CATEGORIES: Blog
 #+TAGS: emacs, org
 
 * Introduction to EMACS

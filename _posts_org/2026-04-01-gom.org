@@ -1,35 +1,25 @@
 #+TITLE: Organizing my git issues in org mode
 #+DATE: 2026-04-01
-#+CATEGORIES: Tutorial
+#+CATEGORIES: Blog
 #+TAGS: emacs, org
 * When Org Mode Meets the Outside World
-
-After a while, my Org setup reached a point where it felt complete. Notes, todos, meetings, ideas — everything had its place, and everything flowed naturally into my agenda, see the last Blogpost:
+After a while, my Org setup reached a point where it felt complete. Notes, todos, meetings, ideas — everything had its place, and everything flowed naturally into my agenda, see the [[https://ric.engineering/posts/Emacs/][last Blogpost]]
 
 But there was one category of tasks that refused to fit in: issues from Git platforms.
 A large part of my work happens in repositories, where tasks are tracked as issues on GitHub, GitLab, or Gitea. Those tasks are just as relevant as anything in my local todo files, but they lived in completely separate systems.
 That split became increasingly annoying. I had my clean, unified Org workflow on one side, and a set of browser tabs on the other.
-The obvious solution was [[https://github.com/magit/forge][Forge]], the Magit extension that integrates Git forges directly into Emacs.
+The first obvious solution was [[https://github.com/magit/forge][Forge]], the Magit extension that integrates Git forges directly into Emacs.
 And to be fair, Forge is impressive, but it felt too heavy for me. The configuration was more involved than I wanted, and it tried to solve a much bigger problem than the one I had.
 What I really wanted was much simpler: I just wanted my issues to show up as Org todos.
-Instead of bending my workflow around a large tool, I decided to build something small that fits exactly what I need.
-
-That became [[https://github.com/erelbng/gom][gom]].
+Instead of bending my workflow around a large tool, I decided to build something small that fits exactly what I need, which became [[https://github.com/erelbng/gom][gom]].
 
 The idea is almost trivial. Instead of talking to APIs directly, gom uses the existing command line tools for each platform. It fetches issues through those tools, transforms them into Org entries, and inserts them into my files.
-There is no database, no background service, no complex state. You run a command, and you get updated tasks.
 
-One of the key decisions was to rely entirely on official or standard CLIs.
+For GitHub, there is ~gh~. For GitLab, there is ~glab~. For Gitea, there is ~tea~. These tools already handle authentication, configuration, and API quirks.
 
-For GitHub, there is =gh=. For GitLab, there is =glab=. For Gitea, there is =tea=. These tools already handle authentication, configuration, and API quirks.
-
-By building on top of them, gom avoids having to reimplement all of that complexity. It becomes a thin layer that simply translates CLI output into Org format.
-
-Once the data is available, the transformation is straightforward. Each issue becomes a TODO entry, enriched with some metadata.
+By building on top of them, i avoided having to reimplement all of that complexity. It becomes a thin layer that simply translates CLI output into Org format, so that each issue becomes a TODO entry, enriched with some metadata.
 
 From there, everything falls back into the standard Org workflow. Issues can be scheduled, tagged, filtered, and viewed in the agenda just like any other task.
-
-That’s really the whole point: external tasks stop being special. They become part of the same system.
 
 I primarily use GitLab, so that backend came first.
 However, I didn’t want gom to be tied to a single platform. Supporting GitHub and Gitea felt like the natural next step, even if I wouldn’t use them as heavily.
@@ -65,7 +55,7 @@ Next, configure your repositories and output file:
         ("gitea.your-domain.de" . gitea)))
 #+END_SRC
 
-After that you can run =M-x gom-dashboard= or =M-x gom-sync= to get all your issues as org todo tasks.
+After that you can run ~M-x gom-dashboard~ or ~M-x gom-sync~ to get all your issues as org todo tasks.
 
 This approach deliberately avoids building a full integration layer which was enough for me.
 
