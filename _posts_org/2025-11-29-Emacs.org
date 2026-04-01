@@ -1,0 +1,116 @@
+#+TITLE: Organizing my todo lists with emacs org mode
+#+DATE: 2025-11-29
+#+CATEGORIES: Tutorial
+#+TAGS: emacs, org
+
+* Introduction to EMACS
+I know a few people that use emacs for note-taking or as an IDE and recently I decided to give it a try. Instead of diving into vanilla Emacs and getting overwhelmed immediately, I picked up [[https://www.spacemacs.org/][spacemacs]]. It gave me structure and just enough guidance to not get lost. For me it was the perfect entry point.
+
+This naturally led me to the Org mode.
+
+At first, I just used it for todos. Then I started writing meeting notes. Then quick ideas. Then a diary. And without really planning it, everything ended up in Org files.
+
+What made it stick was the simplicity and the ability to simply write a source block right where i want to and execute it as well! Saving results in images or tables or plain text. It feels like jupyter notebooks on steroids.
+
+Over time I settled into a structure that feels natural to me. Instead of one giant file, I split things by intent. There is a place for quick notes, one for meetings organized as a datetree, another for a diary, and one for ideas that don’t yet have a concrete form. Larger task lists live in their own files. This separation keeps things readable without losing the feeling that everything belongs to the same system.
+
+One of  Org mode’s many strengths is capture. You can quickly store thoughts without breaking your flow—and let the system decide where they belong.
+
+To support that, I wrote a bit of Lisp to organize my captures exactly for my needs:
+
+#+BEGIN_SRC emacs-lisp
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+(setq org-default-meeting-file (concat org-directory "/meetings.org"))
+(setq org-default-diary-file (concat org-directory "/diary.org"))
+(setq org-default-ideas-file (concat org-directory "/ideas.org"))
+
+(defun my/org-capture-get-topic (file)
+  "Return the point of a topic headline in FILE, creating it if needed."
+  (let ((company (read-string "Topic: ")))
+    (with-current-buffer (find-file-noselect file)
+      (goto-char (point-min))
+      (unless (re-search-forward
+               (format "^\\*+ %s$" (regexp-quote company)) nil t)
+        (goto-char (point-max))
+        (unless (bolp) (insert "\n"))
+        (insert "* " company "\n"))
+      (goto-char (point-min))
+      (re-search-forward (format "^\\*+ %s$" (regexp-quote company)))
+      (point))))
+
+(setq org-capture-templates
+      `(
+        ("t" "ToDo" entry
+         (file+function ,org-default-notes-file
+                        (lambda () (my/org-capture-get-topic org-default-notes-file)))
+         "** TODO %?\n%u\n%a\n"
+         :clock-in t :clock-resume t)
+
+        ("m" "Meeting" entry (file+datetree org-default-meeting-file)
+         "* MEETING %? :MEETING:\n%t"
+         :clock-in t :clock-resume t)
+
+        ("d" "Diary" entry (file+datetree org-default-diary-file)
+         "* %?\n%U\n"
+         :clock-in t :clock-resume t)
+
+        ("i" "Idea" entry
+         (file+function ,org-default-ideas-file
+                        (lambda () (my/org-capture-get-topic org-default-ideas-file)))
+         "* %? :IDEA:\n%t"
+         :clock-in t :clock-resume t)
+        ))
+#+END_SRC
+{: file="config.org" }
+
+With this setup, I don’t have to decide much in the moment. I trigger capture, type what’s on my mind, maybe assign a topic, and move on. The system takes care of putting it somewhere reasonable.
+
+That alone removed a surprising amount of friction.
+
+* Building Small Tools Around Org
+
+At some point, I started wanting more than just storing information. I wanted to extract it in useful ways.
+
+One example was collecting all entries with a specific tag across multiple files. Instead of manually searching, I wrote a small helper:
+
+#+BEGIN_SRC emacs-lisp
+(defun my/org-collect-tagged-subtrees (tag)
+  "Collect all subtrees with TAG from multiple Org files."
+  (interactive "sTag (without colons): ")
+  (let* ((files (list (concat org-directory "/notes.org")
+                      (concat org-directory "/meetings.org")
+                      (concat org-directory "/ideas.org")
+                      (concat org-directory "/main/todo-arbeit.org")
+                      (concat org-directory "/main/todo-persönlich.org")
+                      (concat org-directory "/main/todo.org")))
+         (output-buffer (get-buffer-create (format "*Org tag export: %s*" tag)))
+         (tag-query tag))
+    (with-current-buffer output-buffer
+      (erase-buffer)
+      (org-mode)
+      (insert (format "#+TITLE: All entries tagged :%s:\n\n" tag))
+      (dolist (file files)
+        (when (file-exists-p file)
+          (with-current-buffer (find-file-noselect file)
+            (org-map-entries
+             (lambda ()
+               (let ((subtree (org-copy-subtree t)))
+                 (with-temp-buffer
+                   (org-paste-subtree)
+                   (insert (format "\n#+BEGIN_QUOTE\nFrom: %s\n#+END_QUOTE\n\n" file))
+                   (append-to-buffer output-buffer (point-min) (point-max)))))
+             tag-query)))))
+    (switch-to-buffer output-buffer)))
+#+END_SRC
+
+To keep everything manageable, I load my configuration from a single Org file:
+
+#+BEGIN_SRC emacs-lisp
+(defun dotspacemacs/user-config ()
+  (org-babel-load-file "~/Documents/org/main/config.org"))
+#+END_SRC
+{: file=".spacemacs" }
+
+This way, my configuration becomes part of my note system. Everything lives in one place, written in the same format I use every day. Since it’s all plain text, it fits naturally into a Git repository, giving me versioned snapshots independent of system backups.
+
+Org mode became less of a todo app and more of a thinking environment.
