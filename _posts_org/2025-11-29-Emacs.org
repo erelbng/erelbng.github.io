@@ -4,15 +4,11 @@
 #+TAGS: emacs, org
 
 * Introduction to EMACS
-I know a few people that use emacs for note-taking or as an IDE and recently I decided to give it a try. Instead of diving into vanilla Emacs and getting overwhelmed immediately, I picked up [[https://www.spacemacs.org/][spacemacs]]. It gave me structure and just enough guidance to not get lost. For me it was the perfect entry point.
+I know a few people that use emacs for note-taking or as an IDE and recently I decided to give it a try. Instead of diving into vanilla Emacs, I picked up [[https://www.spacemacs.org/][spacemacs]]. As a former Obsidian user, I wanted to rebuild my note-taking workflow using [[https://orgmode.org/][Org]] mode and [[https://www.orgroam.com/][Org Roam]].
 
-This naturally led me to the Org mode.
+At first glance, Org appears to be just a markup language for notes and todos. But it’s much more than that: it’s a flexible system where plain text, task management, and executable code all coexist. You can write a source block in almost any language, run it, and get the results inline as text, a table, or even an image. It's like Jupyter notebooks, except it's not limited to one language or context. Everything is just text, and everything composes naturally. And before I knew it, nearly everything I was working on ended up in Org files.
 
-At first, I just used it for todos. Then I started writing meeting notes. Then quick ideas. Then a diary. And without really planning it, everything ended up in Org files.
-
-What made it stick was the simplicity and the ability to simply write a source block right where i want to and execute it as well! Saving results in images or tables or plain text. It feels like jupyter notebooks on steroids.
-
-Over time I settled into a structure that feels natural to me. Instead of one giant file, I split things by intent. There is a place for quick notes, one for meetings organized as a datetree, another for a diary, and one for ideas that don’t yet have a concrete form. Larger task lists live in their own files. This separation keeps things readable without losing the feeling that everything belongs to the same system.
+Since Emacs is highly extendable, I gradually settled into a structure that feels natural to me. I have separate files for quick notes, meetings organized as a datetree, a diary, and ideas that haven’t yet taken concrete form. Larger task lists live in their own files. This separation keeps everything readable while maintaining the feeling that it all belongs to the same system.
 
 One of  Org mode’s many strengths is capture. You can quickly store thoughts without breaking your flow—and let the system decide where they belong.
 
@@ -63,13 +59,13 @@ To support that, I wrote a bit of Lisp to organize my captures exactly for my ne
 #+END_SRC
 {: file="config.org" }
 
-With this setup, I don’t have to decide much in the moment. I trigger capture, type what’s on my mind, maybe assign a topic, and move on. The system takes care of putting it somewhere reasonable.
+With this setup, I don’t have to decide much in the moment. I trigger capture, type what’s on my mind, maybe assign a topic, and move on. The system takes care of putting it somewhere reasonable. And amazing upgrade to obsidian (although with some extensions you may be able to replicate this exa
 
 That alone removed a surprising amount of friction.
 
 * Building Small Tools Around Org
 
-At some point, I started wanting more than just storing information. I wanted to extract it in useful ways.
+Eventually, I wanted more than just storing information; I wanted to extract it in useful ways.
 
 One example was collecting all entries with a specific tag across multiple files. Instead of manually searching, I wrote a small helper:
 
@@ -111,6 +107,4 @@ To keep everything manageable, I load my configuration from a single Org file:
 #+END_SRC
 {: file=".spacemacs" }
 
-This way, my configuration becomes part of my note system. Everything lives in one place, written in the same format I use every day. Since it’s all plain text, it fits naturally into a Git repository, giving me versioned snapshots independent of system backups.
-
-Org mode became less of a todo app and more of a thinking environment.
+This way, my configuration becomes part of my note-taking system, as they are just lisp source blocks as well. Everything lives in one place, written in the same format I use every day. Since it’s all plain text, it fits naturally into a Git repository, giving me versioned snapshots independent of system backups. As a result, I’m a lot happier with my workflow.
