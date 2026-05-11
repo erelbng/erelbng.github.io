@@ -2,14 +2,31 @@
 #+DATE: 2026-04-01
 #+CATEGORIES: Blog
 #+TAGS: emacs, org
-* When Org Mode Meets the Outside World
-After a while, my Org setup reached a point where it felt complete. Notes, todos, meetings, ideas — everything had its place, and everything flowed naturally into my agenda, see the [[https://ric.engineering/posts/Emacs/][last Blogpost]]
+* Org Agenda
+Over time, my Org setup reached a point where it felt complete. Notes, todos, meetings, ideas — everything had its place, and everything flowed naturally into my agenda (see my [[https://ric.engineering/posts/Emacs/][previous blog post]]). I could even define my own custom agenda states!
 
-But there was one category of tasks that refused to fit in: issues from Git platforms.
-A large part of my work happens in repositories, where tasks are tracked as issues on GitHub, GitLab, or Gitea. Those tasks are just as relevant as anything in my local todo files, but they lived in completely separate systems.
-That split became increasingly annoying. I had my clean, unified Org workflow on one side, and a set of browser tabs on the other.
+The default TODO/DONE cycle works fine for a grocery list, but real work has more nuance. Org makes it easy to define your own workflow states:
+
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n)" "PROJ(p)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+(setq org-todo-keyword-faces
+      '(("TODO" . (:foreground "orange" :weight bold))
+        ("NEXT" . (:foreground "purple" :weight bold))
+        ("PROJ" . (:foreground "deep sky blue" :weight bold))
+        ("WAITING" . (:foreground "red" :weight bold))))
+#+END_SRC
+{: file="config.org" }
+
+The beauty of this approach is that these keywords are universal: they work everywhere — in the agenda, in tag searches, and in custom views. Define it once, and the whole system respects it.
+
+* git Issues
+One category of tasks refused to fit neatly into my workflow: issues from Git platforms.
+Much of my work happens in repositories, where tasks are tracked as issues on GitHub, GitLab, or Gitea. These issues are just as important as anything in my local todo files, but they lived in completely separate systems. That split was frustrating: a clean, unified Org workflow on one side, and dozens of browser tabs on the other.
+
 The first obvious solution was [[https://github.com/magit/forge][Forge]], the Magit extension that integrates Git forges directly into Emacs.
 And to be fair, Forge is impressive, but it felt too heavy for me. The configuration was more involved than I wanted, and it tried to solve a much bigger problem than the one I had.
+
 What I really wanted was much simpler: I just wanted my issues to show up as Org todos.
 Instead of bending my workflow around a large tool, I decided to build something small that fits exactly what I need, which became [[https://github.com/erelbng/gom][gom]].
 
@@ -23,7 +40,7 @@ From there, everything falls back into the standard Org workflow. Issues can be 
 
 I primarily use GitLab, so that backend came first.
 However, I didn’t want gom to be tied to a single platform. Supporting GitHub and Gitea felt like the natural next step, even if I wouldn’t use them as heavily.
-Instead of implementing everything manually, I used Gemini to help generate parts of the GitHub and Gitea integrations.
+Instead of implementing everything manually, I used Gemini and Claude to help generate parts of the GitHub and Gitea integrations.
 
 * Setup
 The setup is intentionally minimal.
