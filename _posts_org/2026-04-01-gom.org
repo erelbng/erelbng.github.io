@@ -28,7 +28,7 @@ The first obvious solution was [[https://github.com/magit/forge][Forge]], the Ma
 And to be fair, Forge is impressive, but it felt too heavy for me. The configuration was more involved than I wanted, and it tried to solve a much bigger problem than the one I had.
 
 What I really wanted was much simpler: I just wanted my issues to show up as Org todos.
-Instead of bending my workflow around a large tool, I decided to build something small that fits exactly what I need, which became [[https://github.com/erelbng/gom][gom]].
+Instead of bending my workflow around a large tool, I decided to build something small that fits exactly what I need, which became [[https://github.com/erelbng/gom][gom]] - "the Git Org Manager".
 
 The idea is almost trivial. Instead of talking to APIs directly, gom uses the existing command line tools for each platform. It fetches issues through those tools, transforms them into Org entries, and inserts them into my files.
 
