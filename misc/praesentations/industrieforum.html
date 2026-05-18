@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>LogiQuad: Wie intelligente System die Bestandsführung flexibler machen</title>
+<meta name="author" content="Eric Plaß"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./revealjs/dist/reveal.css"/>
+
+<link rel="stylesheet" href="./revealjs/dist/theme/black.css" id="theme"/>
+
+<link rel="stylesheet" href="./custom_components/custom_style.css"/>
+<link rel="stylesheet" href="./revealjs/plugin/highlight/zenburn.css"/><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<style> .reveal video, .reveal iframe, .reveal img:not([src*="logo" i]):not([src*="LOGO" i]) { border-radius: 24px; overflow: hidden} .reveal img[style*="border-radius: 50%"] { border-radius: 50% !important; } </style>
+<section>
+<section id="slide-orgbfb0712">
+<h2 id="orgbfb0712">LogiQuad</h2>
+<div style="font-size: 90%; margin-top: 1em;">
+<p>
+Wie intelligente Systeme die Bestandsführung flexibler machen können
+</p>
+</div>
+<div style="font-size: 60%; margin-top: 2em;">
+<p>
+M.Eng. Eric Plaß, HTWK Leipzig
+</p>
+
+<p>
+<a href="https://fing.htwk-leipzig.de/fakultaet/professuren/prof-martin-guertler">Professur Produktions- und Logistiksysteme</a>
+</p>
+<div style="display: grid; grid-template-columns: 40% 29% 18%;">
+
+<div id="org506a1ac" class="figure">
+<p><img src="./assets/HTWK_LOGO_W.png" alt="HTWK_LOGO_W.png" />
+</p>
+</div>
+
+
+<div id="org473c8e5" class="figure">
+<p><img src="./assets/ING-LOGO_W.png" alt="ING-LOGO_W.png" />
+</p>
+</div>
+
+
+<div id="org2e4dd72" class="figure">
+<p><img src="./assets/tpmb_nurLogo.png" alt="tpmb_nurLogo.png" />
+</p>
+</div>
+</div>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-orgaf97bd8">
+<h2 id="orgaf97bd8">Worum geht es?</h2>
+<div style="font-size: 120%;">
+<ul>
+<li>mobile Robotik</li>
+<li>Inventur
+<ul>
+<li>Reinforcement Learning</li>
+<li>Computer Vision</li>
+
+</ul></li>
+<li>weitere Probleme und Lösungen</li>
+
+</ul>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org5ef58e3">
+<h2 id="org5ef58e3">Das Problem: Inventur</h2>
+<div style="display: grid; grid-template-columns: 50% 50%; gap: 1em; font-size: 80%;">
+<div>
+<p>
+ <video data-autoplay loop muted width= 100% src= ./assets/inv_human.mp4></video>
+</p>
+</div>
+<div>
+<p>
+ <video data-autoplay loop muted width= 100% src= ./assets/inv_quad.mp4></video>
+</p>
+</div>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org902ffcc">
+<h2 id="org902ffcc">Was wäre, wenn&hellip;</h2>
+<p>
+ <video data-autoplay controls muted width= 100% src= ./assets/inv_quad.mp4></video>
+</p>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org73ae453">
+<h2 id="org73ae453">Was wäre, wenn&hellip;</h2>
+
+<div id="orgfd4a48d" class="figure">
+<p><img src="./assets/eierlegende_wollmilchsau_b.png" alt="eierlegende_wollmilchsau_b.png" width="100%" />
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-orgac25af7">
+<h2 id="orgac25af7">&hellip;was braucht man dafür?</h2>
+<div style="display: grid; grid-template-columns: 50% 50%; gap: 1em;">
+<div style="font-size: 80%;">
+<p>
+Ein mobiler Roboter
+</p>
+<ul>
+<li>läuft autonom durchs Lager</li>
+<li>erkennt Objekte und deren Lage</li>
+<li>vergleicht mit dem ERP-System</li>
+<li>erstellt automatisch Berichte</li>
+
+</ul>
+</div>
+<div style="font-size: 80%;">
+<p>
+Warum vier Beine statt Räder?
+</p>
+<ul>
+<li>Treppen und Schwellen</li>
+<li>Enge Gänge und Hindernisse</li>
+
+</ul>
+</div>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org967a31d">
+<h2 id="org967a31d">Reinforcement Learning</h2>
+<div style="display: grid; grid-template-columns: 50% 50%; gap: 1em;">
+<div>
+
+<div id="orgc53422c" class="figure">
+<p><img src="./assets/pigeon_in_skinnerBox.jpg" alt="pigeon_in_skinnerBox.jpg" width="90%" align="center" />
+</p>
+</div>
+<div style="font-size: 60%; text-align: center;">
+<p>
+<a href="https://www.deutschlandfunk.de/der-psychologe-burrhus-frederic-skinner-vater-des-100.html">Der Psychologe Burrhus Frederic Skinner, Vater des „programmierten Lernens“, Deutschlandfunk</a>
+</p>
+</div>
+</div>
+<div style="font-size: 80%;">
+<ul>
+<li><b>operante Konditionierung</b>
+<ul>
+<li>"Programmiertes Lernen"</li>
+<li>"Reinforcement Learning"</li>
+
+</ul></li>
+
+<li>Gute Aktion → Belohnung</li>
+<li>Schlechte Aktion → Strafe</li>
+
+</ul>
+</div>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org34a27e2">
+<h2 id="org34a27e2">Reinforcement Learning</h2>
+
+<div id="org3eeb745" class="figure">
+<p><img src="assets/mdp.svg" alt="mdp.svg" class="org-svg" height="30%," width="30%" align="center" />
+</p>
+</div>
+
+<div style="font-size: 60%; text-align: center;">
+<p>
+mit State \(S_t\), Action \(A_t\) und Reward \(R_t\),
+</p>
+
+<p>
+sodass \[S_0, A_0, R_1, S_1, A_1, R_2, S_2, A_2, R_3, ..., R_T\]
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org1cda476">
+<h2 id="org1cda476">Laufen lernen - in der Simulation</h2>
+<div style="display: grid; grid-template-columns: 33% 33% 33%; gap: 1em;">
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/spot_0.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/spot_1000.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/spot_2000.mp4></video>
+</p>
+</div>
+<div style="display: grid; grid-template-columns: 33% 33% 33%; gap: 1em;">
+<p>
+Start des Trainings
+</p>
+
+<p>
+gelerntes Stehen
+</p>
+
+<p>
+gelernte Laufstile
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org1b20ffe">
+<h2 id="org1b20ffe">Laufen lernen – in der Simulation&hellip;</h2>
+<p>
+ <video data-autoplay controls loop muted width= 60% src= ./assets/go2_walk_basic_genesis2.mp4></video>
+</p>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org9acdb73">
+<h2 id="org9acdb73">&hellip; bis zur komplexen Bewegungssteuerung</h2>
+<p>
+ <video data-autoplay controls loop muted width= 60% src= ./assets/go2_walk_ways_zoom2.mp4></video>
+</p>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org982324c">
+<h2 id="org982324c">Digitaler Zwilling</h2>
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/go2_twin.mp4></video>
+</p>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org262da34">
+<h2 id="org262da34">Computer Vision</h2>
+<div style="display: grid; grid-template-columns: 60% 40%; gap: 1em;">
+<div style="font-size: 80%;">
+<p>
+Was man nicht will
+</p>
+
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/label_handdrawn.mp4></video>
+</p>
+</div>
+<div style="font-size: 80%;">
+<p>
+Besser wäre
+</p>
+
+<div id="org97de34c" class="figure">
+<p><img src="assets/mdp.svg" alt="mdp.svg" class="org-svg" height="100%," width="100%" align="center" />
+</p>
+</div>
+</div>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org13b2c9c">
+<h2 id="org13b2c9c">Daten aus dem Simulator</h2>
+<div style="display: grid; grid-template-columns: 50% 50%; gap: 1em;">
+
+<div id="orgc5feebf" class="figure">
+<p><img src="./assets/scene_0067.png" alt="scene_0067.png" width="100%" />
+</p>
+</div>
+
+
+<div id="org6712f36" class="figure">
+<p><img src="./assets/scene_0067_vis.png" alt="scene_0067_vis.png" width="100%" />
+</p>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: 50% 50%; gap: 1em;">
+<p>
+gerendertes Bild
+</p>
+
+<p>
+mit allen Daten die zum Training benötigt werden
+</p>
+
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org9b17c05">
+<h2 id="org9b17c05">Was braucht man dafür</h2>
+<iframe src="./assets/stl_viewer.html" width="100%" height="600px" style="border: none; border-radius: 8px;"></iframe>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org06f888a">
+<h2 id="org06f888a">Daten aus dem Simulator</h2>
+<div style="display: grid; grid-template-columns: 33% 33% 33%; gap: 0.1em;">
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/scene_0014.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/scene_0154.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay controls loop muted width= 100% src= ./assets/scene_0002.mp4></video>
+</p>
+</div>
+<div style="display: grid; grid-template-columns: 33% 33% 33%; gap: 0.1em; font-size: 20%;">
+
+<div id="orgab8c5af" class="figure">
+<p><img src="./assets/scene_0014.png" alt="scene_0014.png" />
+</p>
+</div>
+
+
+<div id="orgad6a4b2" class="figure">
+<p><img src="./assets/scene_0154.png" alt="scene_0154.png" />
+</p>
+</div>
+
+
+<div id="orga621a7a" class="figure">
+<p><img src="./assets/scene_0002.png" alt="scene_0002.png" />
+</p>
+</div>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-orgd5e267e">
+<h2 id="orgd5e267e">Evaluation der Modelle</h2>
+
+<div id="org956ca41" class="figure">
+<p><img src="./assets/eval_diagnostic_scene_14_b.png" alt="eval_diagnostic_scene_14_b.png" width="100%" />
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org755730b">
+<h2 id="org755730b">Übertragung in die Realität</h2>
+
+<div id="org5528eb9" class="figure">
+<p><img src="./assets/eval_diagnostic_real1_b.png" alt="eval_diagnostic_real1_b.png" width="100%" />
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org3c63891">
+<h2 id="org3c63891">Übertragung in die Realität</h2>
+
+<div id="org8644b5a" class="figure">
+<p><img src="./assets/eval_diagnostic_real3_b.png" alt="eval_diagnostic_real3_b.png" width="100%" />
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org004161b">
+<h2 id="org004161b">Übertragung auf andere Bauteile</h2>
+
+<div id="org11eee97" class="figure">
+<p><img src="./assets/eval_diagnostic_realm_b.png" alt="eval_diagnostic_realm_b.png" width="100%" />
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org08b83c3">
+<h2 id="org08b83c3">Der automatisierte Inventurprozess</h2>
+<div style="font-size: 75%;">
+<p>
+Work in Progress&hellip;
+</p>
+
+
+<div id="org8a0140f" class="figure">
+<p><img src="./assets/eval_diagnostic_real2_b.png" alt="eval_diagnostic_real2_b.png" height="80%," width="80%" align="center" />
+</p>
+</div>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section data-transition="zoom">
+<section id="slide-org92d31c4" data-transition="zoom">
+<h2 id="org92d31c4">weitere Projekte</h2>
+
+<div id="org811bc60" class="figure">
+<p><img src="assets/mdp.svg" alt="mdp.svg" class="org-svg" height="30%," width="30%" align="center" />
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section data-transition="zoom">
+<section id="slide-org1b3a5ca" data-transition="zoom">
+<h2 id="org1b3a5ca">Reinforcement Learning Allgemein</h2>
+
+<div id="org7a6d256" class="figure">
+<p><img src="assets/mdp2.svg" alt="mdp2.svg" class="org-svg" height="80%," width="80%" align="center" />
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org6664b21">
+<h2 id="org6664b21">Vergleich und Entwicklung neuer Regler</h2>
+<div style="display: grid; grid-template-columns: auto auto;">
+
+<p>
+ <video data-autoplay loop muted width= 150% src= ./assets/policy_lqr_animation.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay loop muted width= 150% src= ./assets/policy_ppo_animation.mp4></video>
+</p>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-orgcc5d54f">
+<h2 id="orgcc5d54f">humanoide Robotik</h2>
+<div style="display: grid; grid-template-columns: auto auto;">
+<p>
+ <video data-autoplay loop muted width= 100% src= ./assets/failedhumanoid.mp4></video>
+</p>
+
+<p>
+ <video data-autoplay loop muted width= 100% src= ./assets/g1.mp4></video>
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-orge10f496">
+<h2 id="orge10f496">humanoide Robotik</h2>
+<p>
+ <video data-autoplay loop muted width= 25% src= ./assets/humanoid_robot_arm_web.mp4></video>
+</p>
+
+<div style="font-size: 30%;">
+<p>
+Entstanden in Bachelorarbeit "Implementierung eines parametrischen Gestensystems in einem 3D-gedruckten humanoiden Roboterarm", B.Eng. Valentin Kögel
+</p>
+
+<p>
+Projekt HopeJr, the-robot-studio
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org4d5cf2f">
+<h2 id="org4d5cf2f">humanoide Robotik</h2>
+<div style="display: grid; grid-template-columns: 33% 33% 33%; gap: 0.1em; font-size: 30%;">
+
+<div id="org0fb1bd4" class="figure">
+<p><img src="./assets/nano-hand-vor.jpeg" alt="nano-hand-vor.jpeg" height="56%," width="56%" align="center" />
+</p>
+</div>
+
+
+<div id="orge33890d" class="figure">
+<p><img src="./assets/nano-hand-2.jpeg" alt="nano-hand-2.jpeg" height="56%," width="56%" align="center" />
+</p>
+</div>
+
+
+<div id="org110bbd6" class="figure">
+<p><img src="./assets/nano-hand-mont.png" alt="nano-hand-mont.png" />
+</p>
+</div>
+</div>
+
+<div style="font-size: 30%;">
+<p>
+Projekt robot-nano-hand, the-robot-studio
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org2c28524">
+<h2 id="org2c28524">weitere mobile Roboter</h2>
+<div style="display: grid; grid-template-columns: 33% 33% 33%; gap: 0.1em; font-size: 30%;">
+
+<div id="orgdfed63c" class="figure">
+<p><img src="./assets/openduck.png" alt="openduck.png" height="70%," width="70%" align="center" />
+</p>
+</div>
+
+
+<div id="orgb4570a8" class="figure">
+<p><img src="./assets/openduck1.png" alt="openduck1.png" height="70%," width="70%" align="center" />
+</p>
+</div>
+
+
+<div id="org10813b9" class="figure">
+<p><img src="./assets/openduck2.png" alt="openduck2.png" height="70%," width="70%" align="center" />
+</p>
+</div>
+</div>
+
+<div style="font-size: 30%;">
+<p>
+Abbildungen aus Bachelorarbeit "Konzeption und Implementierung eines Absturz- und Kollisionssicherungssystems für einen mobilen Laufroboter", Niklas Kohrmann
+</p>
+
+<p>
+Projekt apirrone/Open-Duck-Mini
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org986caf4">
+<h2 id="org986caf4">Taktile Sensoren</h2>
+
+<div id="orgb5c6432" class="figure">
+<p><img src="./assets/e-flesh.png" alt="e-flesh.png" height="100%," width="100%" align="center" />
+</p>
+</div>
+
+<div style="font-size: 30%;">
+<p>
+Projekt eFlesh: Highly customizable Magnetic Touch Sensing using Cut-Cell Microstructures
+</p>
+
+<p>
+Venkatesh Pattabiraman and Zizhou Huang and Daniele Panozzo and Denis Zorin and Lerrel Pinto and Raunaq Bhirangi
+</p>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section>
+<section id="slide-org8da9ac7">
+<h2 id="org8da9ac7">Vielen Dank für Ihre Aufmerksamkeit</h2>
+<p>
+ <video data-autoplay controls loop muted width= 80% src= ./assets/go2_standup.mp4></video>
+</p>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section data-transition="zoom">
+<section id="slide-org4e61c14" data-transition="zoom">
+<h2 id="org4e61c14">Vielen Dank für Ihre Aufmerksamkeit!</h2>
+<div style="display: grid; grid-template-columns: 35% 65%; gap: 2em; align-items: center; margin-top: 0.2em;">
+
+<div style="text-align: center;">
+
+<div id="org1286f09" class="figure">
+<p><img src="./assets/mein_foto.png" alt="mein_foto.png" style="border-radius: 50%; width: 100%; max-width: 250px; object-fit: cover; aspect-ratio: 1/1; margin: 0 auto;" />
+</p>
+</div>
+</div>
+
+<div style="text-align: left; font-size: 85%;">
+<ul style="list-style-type: none; padding: 0; font-size: 80%;">
+<li style="margin-bottom: 0.5em;">M.Eng. Eric Plaß</li>
+<li style="margin-bottom: 0.5em;">E-Mail <a href="mailto:eric.elbing@htwk-leipzig.de" style="text-decoration: none;">eric.elbing@htwk-leipzig.de</a></li>
+<li style="margin-bottom: 1.0em;">LinkedIn <a href="https://www.linkedin.com/in/eric-plass/"text-decoration: none;">/in/eric-plass</a></li>
+<li style="margin-bottom: 0.5em;">HTWK Leipzig, Fakultät Ingenieurwissenschaften</li>
+<li style="margin-bottom: 1.0em;"><a href="https://fing.htwk-leipzig.de/fakultaet/professuren/prof-martin-guertler" style="text-decoration: none;">Professur Produktions- und Logistiksysteme</a></li>
+<li style="margin-bottom: 0.0em;">Nieper-Bau NI-107 / NI-108</li>
+</ul>
+
+<div style="margin-top: 1em; display: flex; gap: 10px; align-items: center;">
+
+<div id="orgb18c08d" class="figure">
+<p><img src="./assets/HTWK_LOGO_W.png" alt="HTWK_LOGO_W.png" height="30px" style="margin: 0;" />
+</p>
+</div>
+
+<div id="org90bc452" class="figure">
+<p><img src="./assets/ING-LOGO_W.png" alt="ING-LOGO_W.png" height="30px" style="margin: 0;" />
+</p>
+</div>
+
+<div id="org413d18f" class="figure">
+<p><img src="./assets/EU-LOGO.png" alt="EU-LOGO.png" height="30px" style="margin: 0;" />
+</p>
+</div>
+</div>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+<section data-transition="zoom">
+<section id="slide-org0d08c5a" data-transition="zoom">
+<h2 id="org0d08c5a">Vielen Dank für Ihre Aufmerksamkeit!</h2>
+<div style="display: grid; grid-template-columns: 35% 65%; gap: 2em; align-items: center; margin-top: 0.2em;">
+
+<div style="text-align: center;">
+
+<div id="org07ba0a1" class="figure">
+<p><img src="./assets/csm_Prof.Gürtler_hörsaal_vers4_c55584dc84.png" alt="csm_Prof.Gürtler_hörsaal_vers4_c55584dc84.png" style="border-radius: 50%; width: 100%; max-width: 250px; object-fit: cover; aspect-ratio: 1/1; margin: 0 auto;" />
+</p>
+</div>
+</div>
+
+<div style="text-align: left; font-size: 85%;">
+<ul style="list-style-type: none; padding: 0; font-size: 80%;">
+<li style="margin-bottom: 0.1em;"> Prof. Dr. rer. nat. Martin Gürtler </li>
+<li style="margin-bottom: 1.1em;">E-Mail <a href="mailto:martin.guertler@htwk-leipzig.de" style="text-decoration: none;">martin.guertler@htwk-leipzig.de</a></li>
+<li style="margin-bottom: 0.1em;">HTWK Leipzig, Fakultät Ingenieurwissenschaften</li>
+<li style="margin-bottom: 1.0em;"><a href="https://fing.htwk-leipzig.de/fakultaet/professuren/prof-martin-guertler" style="text-decoration: none;">Professur Produktions- und Logistiksysteme</a></li>
+</ul>
+
+<div style="margin-top: 1em; display: flex; gap: 10px; align-items: center;">
+
+<div id="org814952f" class="figure">
+<p><img src="./assets/HTWK_LOGO_W.png" alt="HTWK_LOGO_W.png" height="30px" style="margin: 0;" />
+</p>
+</div>
+
+<div id="org9b753c3" class="figure">
+<p><img src="./assets/ING-LOGO_W.png" alt="ING-LOGO_W.png" height="30px" style="margin: 0;" />
+</p>
+</div>
+</div>
+</div>
+<div class="slide-footer">LogiQuad: Wie intelligente Systeme die Bestandsführung flexibler machen | M.Eng. Eric Plaß | HTWK Leipzig</div>
+</section>
+</section>
+</div>
+</div>
+<script src="./revealjs/dist/reveal.js"></script>
+<script src="./revealjs/plugin/markdown/markdown.js"></script>
+<script src="./revealjs/plugin/highlight/highlight.js"></script>
+<script src="./revealjs/plugin/notes/notes.js"></script>
+<script src="./revealjs/plugin/zoom/zoom.js"></script>
+
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom],
+slideNumber:true
+});
+
+</script>
+</body>
+</html>

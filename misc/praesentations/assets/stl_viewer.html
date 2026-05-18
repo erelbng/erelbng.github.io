@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>STL Viewer</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #191919; } 
+        canvas { display: block; }
+    </style>
+    
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script src="stl_data.js"></script>
+</head>
+<body>
+    <script type="module">
+     import * as THREE from 'three';
+     import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+     const scene = new THREE.Scene();
+     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+     camera.position.set(0, 0, 100);
+
+     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+     renderer.setSize(window.innerWidth, window.innerHeight);
+     document.body.appendChild(renderer.domElement);
+
+     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); 
+     scene.add(ambientLight);
+     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+     directionalLight.position.set(10, 20, 10).normalize();
+     scene.add(directionalLight);
+
+     const controls = new OrbitControls(camera, renderer.domElement);
+     controls.enableDamping = true;
+     controls.dampingFactor = 0.05;
+
+     function base64ToArrayBuffer(base64) {
+         const binary_string = window.atob(base64);
+         const len = binary_string.length;
+         const bytes = new Uint8Array(len);
+         for (let i = 0; i < len; i++) {
+             bytes[i] = binary_string.charCodeAt(i);
+         }
+         return bytes.buffer;
+     }
+
+     // Wir rufen die Variable aus der stl_data.js auf
+     const loader = new STLLoader();
+     const arrayBuffer = base64ToArrayBuffer(window.stlBase64);
+     const geometry = loader.parse(arrayBuffer);
+
+     const material = new THREE.MeshStandardMaterial({ 
+         color: 0x8888888,
+         roughness: 0.4, 
+         metalness: 0.1 
+     });
+     
+     let stlMesh = new THREE.Mesh(geometry, material);
+
+     geometry.computeBoundingBox();
+     const center = new THREE.Vector3();
+     geometry.boundingBox.getCenter(center);
+     geometry.translate(-center.x, -center.y, -center.z);
+
+     scene.add(stlMesh);
+
+     function animate() {
+         requestAnimationFrame(animate);
+         if (stlMesh) {
+             stlMesh.rotation.y += 0.005; 
+             stlMesh.rotation.x += 0.002;
+         }
+         controls.update();
+         renderer.render(scene, camera);
+     }
+     animate();
+
+     window.addEventListener('resize', onWindowResize, false);
+     function onWindowResize() {
+         camera.aspect = window.innerWidth / window.innerHeight;
+         camera.updateProjectionMatrix();
+         renderer.setSize(window.innerWidth, window.innerHeight);
+     }
+    </script>
+</body>
+</html>

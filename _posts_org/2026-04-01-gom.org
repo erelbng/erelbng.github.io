@@ -2,7 +2,7 @@
 #+DATE: 2026-04-01
 #+CATEGORIES: Blog
 #+TAGS: emacs, org
-* Org Agenda
+
 Over time, my Org setup reached a point where it felt complete. Notes, todos, meetings, ideas — everything had its place, and everything flowed naturally into my agenda (see my [[https://ric.engineering/posts/Emacs/][previous blog post]]). I could even define my own custom agenda states!
 
 The default TODO/DONE cycle works fine for a grocery list, but real work has more nuance. Org makes it easy to define your own workflow states:

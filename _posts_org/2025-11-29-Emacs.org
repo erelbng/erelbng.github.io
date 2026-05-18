@@ -3,7 +3,6 @@
 #+CATEGORIES: Blog
 #+TAGS: emacs, org
 
-* Introduction to EMACS
 I know a few people that use emacs for note-taking or as an IDE and recently I decided to give it a try. Instead of diving into vanilla Emacs, I picked up [[https://www.spacemacs.org/][spacemacs]]. As a former Obsidian user, I wanted to rebuild my note-taking workflow using [[https://orgmode.org/][Org]] mode and [[https://www.orgroam.com/][Org Roam]].
 
 At first glance, Org appears to be just a markup language for notes and todos. But it’s much more than that: it’s a flexible system where plain text, task management, and executable code all coexist. You can write a source block in almost any language, run it, and get the results inline as text, a table, or even an image. It's like Jupyter notebooks, except it's not limited to one language or context. Everything is just text, and everything composes naturally. And before I knew it, nearly everything I was working on ended up in Org files.
