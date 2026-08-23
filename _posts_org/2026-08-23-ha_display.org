@@ -13,7 +13,7 @@ What I wanted was a normal wall panel: something I can configure from Home Assis
 
 All of that for not much money and not much overhead.
 Surprisingly, I did not find many projects that were just that, so I built my own.
-An ESP32 and a cheap 4 inch touch display felt like enough hardware, which in the end was absolutely enough.
+An ESP32 and a cheap 4 inch touch display felt like enough hardware, which in the end was absolutely enough (even with fairly easy wiring which you can check out [[file:/assets/images/wiring.png][here]], just make sure that you set the touch shield in SPI mode).
 
 The parts are quite cheap, Home Assistant already has the state, and the WebSocket API is documented. So i created [[https://github.com/erelbng/ha_display][ha_display]].
 
